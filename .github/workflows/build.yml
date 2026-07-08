@@ -1,4 +1,4 @@
-name: Build Game APK
+name: Build Game APK and AAB
 on: [push, workflow_dispatch]
 
 jobs:
@@ -19,11 +19,15 @@ jobs:
         with:
           gradle-version: 8.5
 
-      - name: Compile APK
-        run: gradle :app:assembleDebug
+      - name: Compile APK and AAB Bundle
+        run: |
+          gradle :app:assembleDebug
+          gradle :app:bundleDebug
 
-      - name: Upload Completed APK
+      - name: Upload Completed Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Cricket-Manager-26-APK
-          path: "**/build/outputs/apk/debug/*.apk"
+          name: Cricket-Manager-26-Builds
+          path: |
+            **/build/outputs/apk/debug/*.apk
+            **/build/outputs/bundle/debug/*.aab
