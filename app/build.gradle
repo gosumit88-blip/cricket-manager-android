@@ -1,1 +1,20 @@
+apply plugin: 'com.android.application'
 
+android {
+    namespace 'com.cricketmanager.game'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.cricketmanager.game"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
