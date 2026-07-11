@@ -7,7 +7,7 @@ android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.cricketmanager.game"
+        applicationId "com.cricketmanager.com"
         minSdk 21
         targetSdk 34
         versionCode 1
