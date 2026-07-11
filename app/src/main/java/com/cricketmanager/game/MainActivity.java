@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
     // ⚠️ Yahan apni Unity Dashboard se mili 7-digit Game ID daalein (Testing ke liye koi bhi dummy ID nahi chalegi)
     private String unityGameId = "800084181"; 
     private String bannerPlacementId = "Banner_Android"; // Unity ka default Banner ID
-    private boolean testMode = true; // Testing ke waqt ise true rakhein, real ads ke liye false karein
+    private boolean testMode = false; // Testing ke waqt ise true rakhein, real ads ke liye false karein
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
