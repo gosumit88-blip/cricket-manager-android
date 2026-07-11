@@ -4,17 +4,18 @@ plugins {
 
 android {
     namespace 'com.cricketmanager.game'
-    compileSdk 34
+    compileSdk 35 // 🎯 Ise badal kar 35 kar diya hai
 
     defaultConfig {
         applicationId "com.cricketmanager.com"
         minSdk 21
-        targetSdk 34
-        versionCode 1
-        versionName "1.0"
+        targetSdk 35 // 🎯 Ise bhi badal kar 35 kar diya hai
+        
+        // ⚠️ Naye upload ke liye version badalna zaroori hai
+        versionCode 2 
+        versionName "1.1"
     }
 
-    // 🔑 Automatic bani key se connect karne ke liye
     signingConfigs {
         release {
             storeFile file("../release.keystore")
