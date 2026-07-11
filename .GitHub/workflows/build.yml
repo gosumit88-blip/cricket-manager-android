@@ -1,4 +1,4 @@
-name: Build Game APK
+name: Build Signed Game APK and AAB
 on: [push, workflow_dispatch]
 
 jobs:
@@ -14,14 +14,21 @@ jobs:
           java-version: '17'
           distribution: 'zulu'
 
-      - name: Setup Gradle
+      - name: Setup Gradle Automatically
         uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: 8.5
 
-      - name: Compile APK
-        run: gradle :app:assembleDebug
+      # Ab koi naya key tool command nahi chalega, direct aapki uploaded key use hogi
+      - name: Compile Signed APK and AAB Bundle
+        run: |
+          gradle :app:bundleRelease
+          gradle :app:assembleRelease
 
-      - name: Upload Completed APK
+      - name: Upload Completed Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Cricket-Manager-26-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: Cricket-Manager-26-Signed-Builds
+          path: |
+            **/build/outputs/apk/release/*.apk
+            **/build/outputs/bundle/release/*.aab
