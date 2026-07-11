@@ -19,7 +19,7 @@ jobs:
         with:
           gradle-version: 8.5
 
-      # Ab koi naya key tool command nahi chalega, direct aapki uploaded key use hogi
+      # 🚀 Direct aapki uploaded permanent key se app sign hoga
       - name: Compile Signed APK and AAB Bundle
         run: |
           gradle :app:bundleRelease
