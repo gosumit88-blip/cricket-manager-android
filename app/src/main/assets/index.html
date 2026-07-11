@@ -314,6 +314,67 @@ table.stattable tr.out td{color:var(--ink-soft);}
 .newsitem.retirement{border-left-color:var(--leather);}
 .newsitem.reaction{border-left-color:#E08A3C;}
 
+/* ===================== TEAM DASHBOARD (modern layout) ===================== */
+.dash-hero{
+  position:relative; overflow:hidden;
+  background:linear-gradient(135deg, var(--pitch) 0%, #1B2A4A 55%, #241238 100%);
+  border-radius:16px; padding:20px 18px; margin-bottom:14px;
+  border:1px solid rgba(79,163,247,0.25);
+  box-shadow:0 8px 24px rgba(0,0,0,0.45);
+}
+.dash-hero::before{
+  content:""; position:absolute; top:-40%; right:-15%; width:220px; height:220px;
+  background:radial-gradient(circle, rgba(217,180,74,0.16), transparent 70%);
+  pointer-events:none;
+}
+.dash-hero .dh-top{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+.dash-hero .dh-flag{font-size:2.4rem; line-height:1;}
+.dash-hero .dh-season{
+  font-family:monospace; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+  background:rgba(217,180,74,0.16); color:var(--brass); border:1px solid rgba(217,180,74,0.4);
+  padding:4px 10px; border-radius:20px; white-space:nowrap;
+}
+.dash-hero .dh-name{font-size:1.5rem; font-weight:800; color:var(--on-dark); margin-top:8px;}
+.dash-hero .dh-sub{font-size:0.78rem; color:rgba(245,246,248,0.7); margin-top:2px;}
+
+.stat-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+.stat-tile{
+  background:var(--paper-2); border:1px solid var(--line); border-left:3px solid var(--line);
+  border-radius:12px; padding:11px 13px; box-shadow:0 2px 8px rgba(0,0,0,0.25);
+}
+.stat-tile .stat-label{font-family:monospace; font-size:0.6rem; text-transform:uppercase; letter-spacing:0.07em; color:var(--ink-soft);}
+.stat-tile .stat-value{font-size:1.15rem; font-weight:800; font-family:monospace; margin-top:3px; color:var(--ink);}
+.stat-tile.accent-gold{border-left-color:var(--brass);}
+.stat-tile.accent-blue{border-left-color:var(--blue);}
+.stat-tile.accent-purple{border-left-color:var(--purple);}
+.stat-tile.accent-green{border-left-color:var(--good);}
+.stat-tile.accent-red{border-left-color:var(--bad);}
+
+.section-title{
+  display:flex; align-items:center; gap:8px; margin:18px 0 8px 0;
+  font-family:monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-soft);
+}
+.section-title::before{content:""; width:4px; height:14px; background:var(--brass); border-radius:2px; display:inline-block;}
+.section-title .st-action{margin-left:auto;}
+
+.quick-actions{display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px;}
+.quick-action-btn{
+  background:var(--paper-2); border:1px solid var(--line); border-radius:12px;
+  padding:12px 4px; text-align:center; cursor:pointer; color:var(--ink);
+  display:flex; flex-direction:column; align-items:center; gap:5px; font-size:0.66rem;
+  transition:transform 0.1s ease, border-color 0.15s ease;
+}
+.quick-action-btn .qa-icon{font-size:1.35rem;}
+.quick-action-btn:active{transform:scale(0.96);}
+.quick-action-btn.accent{border-color:var(--leather); background:rgba(229,83,61,0.08);}
+
+.fixture-hero{
+  background:linear-gradient(135deg, rgba(79,163,247,0.12), rgba(185,140,224,0.08));
+  border:1px solid rgba(79,163,247,0.35); border-radius:14px; padding:14px 16px; margin-bottom:12px;
+}
+.fixture-hero .fh-tag{font-family:monospace; font-size:0.62rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--blue);}
+.fixture-hero .fh-title{font-size:1.05rem; font-weight:800; color:var(--ink); margin:4px 0 8px 0;}
+
 /* ===================== SOCIAL LIFE (tweet cards) ===================== */
 .tweetcard{
   background:var(--paper-2); border:1px solid var(--line); border-radius:var(--radius);
@@ -441,6 +502,7 @@ function genPlayer(team, role, usedNames, tierRange){
     age: clamp(19 + Math.round(experience/13) + randi(-2,3), 18, 39),
     injury: { injured:false, daysLeft:0, type:null },
     personalCoach: false,
+    bowlSpecialty: null, // "Death Overs Specialist" | "Middle Overs Specialist" | "Powerplay Specialist" | null
     career:{matches:0,innings:0,runs:0,balls:0,wickets:0,ballsBowled:0,runsConceded:0,hundreds:0,fifties:0,fiveFor:0,catches:0,runouts:0,stumpings:0,highScore:0,bestBowling:"0/0",fastestFifty:999,fastestHundred:999},
   };
   if(role==="Batter"){ p.batSkill = base + randi(-3,5); p.bowlSkill = randi(15,30); }
@@ -449,6 +511,8 @@ function genPlayer(team, role, usedNames, tierRange){
   else if(role==="Wicketkeeper"){ p.batSkill = base + randi(-2,6); p.bowlSkill = randi(10,20); p.keeper = true; }
   p.batSkill = clamp(p.batSkill, 30, 99);
   p.bowlSkill = clamp(p.bowlSkill, 30, 99);
+  if(p.bowlType==="pace"){ p.bowlSpecialty = pick(["Death Overs Specialist","Death Overs Specialist","Powerplay Specialist",null]); }
+  else if(p.bowlType==="spin"){ p.bowlSpecialty = pick(["Middle Overs Specialist","Middle Overs Specialist","Middle Overs Specialist",null]); }
   return p;
 }
 
@@ -504,6 +568,11 @@ function formArrow(trend){
 }
 function formLabel(p){
   return `<span class="badge ${badgeClass(p.form)}">${p.form}</span> ${formArrow(p.formTrend)}`;
+}
+function specialtyBadge(p){
+  if(!p.bowlSpecialty) return "";
+  const cls = p.bowlSpecialty==="Death Overs Specialist" ? "outofform" : p.bowlSpecialty==="Powerplay Specialist" ? "good" : "average";
+  return `<span class="badge ${cls}">${p.bowlSpecialty}</span>`;
 }
 
 /* ===================== COACHING STAFF (contract-based) ===================== */
@@ -597,7 +666,7 @@ function updateFanbase(team1, team2, winner, result){
   }
   const loser = winner===team1 ? team2 : team1;
   const upset = TIER[winner] > TIER[loser]; // higher tier number = weaker team pulling off an upset
-  const winGainPct = (upset ? 0.028 : 0.013) + rand(0,0.01);
+  const winGainPct = (upset ? 0.028 : 0.013) + rand(0,0.01) + sponsorFanBonusPct(winner);
   const loseLossPct = 0.009 + rand(0,0.008);
   const winnerBefore = STATE.fanbase[winner], loserBefore = STATE.fanbase[loser];
   STATE.fanbase[winner] = Math.round(winnerBefore*(1+winGainPct));
@@ -904,6 +973,7 @@ function updateFinance(team1, team2, winner, result){
     const fin = STATE.finance[t];
     let earn = base;
     if(winner===t) earn += 380000 + Math.round(fin.value*0.0015);
+    earn += sponsorMatchIncome(t);
     // Wage bill is an ANNUAL figure; a team plays roughly a season's worth of matches,
     // so only a small slice of it is attributable to any single match.
     const wageCost = Math.round(fin.wageBill/150);
@@ -911,6 +981,75 @@ function updateFinance(team1, team2, winner, result){
     fin.balance += net;
     result.financeDelta[t] = net;
   });
+}
+
+/* ===================== SPONSORSHIPS (stadium / bat / jersey / shoes) ===================== */
+const SPONSOR_CATEGORIES = ["stadium","bat","jersey","shoes"];
+const SPONSOR_LABEL = { stadium:"Stadium Naming Rights", bat:"Bat Sponsor", jersey:"Jersey Sponsor", shoes:"Shoes Sponsor" };
+const SPONSOR_NAMES = {
+  stadium: ["Titan Financial","Meridian Bank","Apex Energy","Skyline Insurance","Horizon Telecom","Vantage Motors","Ironclad Capital"],
+  bat: ["Falcon Bats","IronWood Cricket","Thunderstrike Willow","ProGrip Sports","Meteor Cricket Co.","Redwood Bats"],
+  jersey: ["Vertex Apparel","StormFit","Meridian Wear","Crestline Sportswear","Ridgeback Sports","Solaris Kit Co."],
+  shoes: ["SwiftStride","GripMax Footwear","Velocity Shoes","TrailBlaze Sport","Momentum Kicks","Anchor Point Footwear"],
+};
+const SPONSOR_TIERS = [["Bronze",1],["Silver",1.8],["Gold",3],["Platinum",5]];
+function genSponsorCandidate(category){
+  const [tier, mult] = pick(SPONSOR_TIERS);
+  return { name: pick(SPONSOR_NAMES[category]), category, tier, mult, perMatchFee: Math.round(20000*mult) };
+}
+function genSponsorPool(category, count){
+  const n = count || 5;
+  const pool = [];
+  for(let i=0;i<n;i++) pool.push(genSponsorCandidate(category));
+  return pool;
+}
+function ensureSponsors(team){
+  STATE.sponsors = STATE.sponsors || {};
+  if(!STATE.sponsors[team]) STATE.sponsors[team] = { stadium:null, bat:null, jersey:null, shoes:null };
+  return STATE.sponsors[team];
+}
+function signSponsor(team, category, candidate, years){
+  const sp = ensureSponsors(team);
+  const signingBonus = Math.round(candidate.perMatchFee * years * 6);
+  ensureFinance(team).balance += signingBonus;
+  sp[category] = { name:candidate.name, tier:candidate.tier, mult:candidate.mult, perMatchFee:candidate.perMatchFee, contractYears:years, yearsLeft:years, signingBonus };
+  addNewsItem("result", `${team} have signed ${candidate.name} as their new ${SPONSOR_LABEL[category]} (${candidate.tier} tier, ${years}-year deal) — a signing bonus of $${signingBonus.toLocaleString()} lands in the club account.`);
+  save();
+}
+function tickSponsorContracts(){
+  TEAM_LIST.forEach(team=>{
+    const sp = STATE.sponsors && STATE.sponsors[team];
+    if(!sp) return;
+    SPONSOR_CATEGORIES.forEach(cat=>{
+      if(sp[cat]){
+        sp[cat].yearsLeft -= 1;
+        if(sp[cat].yearsLeft<=0){
+          addNewsItem("result", `${team}'s ${SPONSOR_LABEL[cat]} deal with ${sp[cat].name} has expired.`);
+          sp[cat] = null;
+        }
+      }
+    });
+  });
+}
+function sponsorMatchIncome(team){
+  const sp = STATE.sponsors && STATE.sponsors[team];
+  if(!sp) return 0;
+  return SPONSOR_CATEGORIES.reduce((sum,cat)=> sum + (sp[cat] ? sp[cat].perMatchFee : 0), 0);
+}
+function sponsorBattingBonus(team){
+  const sp = STATE.sponsors && STATE.sponsors[team];
+  if(!sp || !sp.bat) return 0;
+  return (sp.bat.mult-1)*0.8; // Bronze ~0, Platinum ~3.2
+}
+function sponsorInjuryReduction(team){
+  const sp = STATE.sponsors && STATE.sponsors[team];
+  if(!sp || !sp.shoes) return 0;
+  return (sp.shoes.mult-1)*0.002; // subtracted from injury chance
+}
+function sponsorFanBonusPct(team){
+  const sp = STATE.sponsors && STATE.sponsors[team];
+  if(!sp || !sp.jersey) return 0;
+  return (sp.jersey.mult-1)*0.004; // added to win-fan-gain percentage
 }
 
 /* ===================== SCOUTING ===================== */
@@ -1051,6 +1190,23 @@ function generateNextEvent(){
   save();
 }
 
+function startCustomTournament(name, sponsor, teams, mode, matchesTotalIfSeries){
+  const team = STATE.managedTeam;
+  const host = chooseHost(team, teams);
+  const label = sponsor ? `${name} (presented by ${sponsor})` : name;
+  if(teams.length===2){
+    const opponent = teams.find(t=>t!==team);
+    STATE.currentEvent = { type:"custom", customKind:"series", name, sponsor, mode, opponent, host, teams, matchesTotal:matchesTotalIfSeries, table:eventTableInit(teams), squad14:null, seriesCaptain:null };
+    STATE.schedule = [ buildFixture("custom", mode, opponent, host, `${name} — Match 1 vs ${opponent}`) ];
+  } else {
+    const rivals = teams.filter(t=>t!==team);
+    STATE.currentEvent = { type:"custom", customKind:"roundrobin", name, sponsor, mode, teams, host, table:eventTableInit(teams), userGroupMatches:rivals.slice(), aiGroupDone:false, squad14:null, seriesCaptain:null };
+    STATE.schedule = [ buildFixture("custom", mode, rivals[0], host, `${name} — vs ${rivals[0]}`) ];
+  }
+  addNewsItem("result", `${label} gets underway, hosted by ${host}! Teams: ${teams.join(", ")}.`);
+  save();
+}
+
 function advanceSchedule(finishedFixture, winner){
   const ev = STATE.currentEvent;
   if(!ev){ generateNextEvent(); return; }
@@ -1166,6 +1322,40 @@ function advanceSchedule(finishedFixture, winner){
       STATE.currentEvent = null;
       generateNextEvent();
     }
+  } else if(ev.type==="custom"){
+    if(ev.customKind==="series"){
+      const playedSoFar = ev.table[team].played;
+      if(playedSoFar < ev.matchesTotal){
+        STATE.schedule.push(buildFixture("custom", ev.mode, opp, ev.host, `${ev.name} — Match ${playedSoFar+1} vs ${opp}`));
+      } else {
+        const seriesWinner = ev.table[team].won>ev.table[opp].won ? team : ev.table[opp].won>ev.table[team].won ? opp : null;
+        addNewsItem("result", seriesWinner ? `${seriesWinner} win the ${ev.name}!` : `${ev.name} ends level.`);
+        STATE.currentEvent = null;
+        generateNextEvent();
+      }
+    } else {
+      // round-robin among 3+ user-chosen teams
+      if(ev.userGroupMatches.length>0){
+        const nextOpp = ev.userGroupMatches.shift();
+        STATE.schedule.push(buildFixture("custom", ev.mode, nextOpp, ev.host, `${ev.name} — vs ${nextOpp}`));
+      } else {
+        if(!ev.aiGroupDone){
+          const rivals = ev.teams.filter(t=>t!==team);
+          for(let i=0;i<rivals.length;i++){
+            for(let j=i+1;j<rivals.length;j++){
+              const res = quickSimAI(rivals[i], rivals[j]);
+              eventRecordResult(ev.table, rivals[i], rivals[j], res.winner);
+              postMatchSocial({team1:rivals[i], team2:rivals[j], winner:res.winner, margin:`${res.scoreA}-${res.scoreB}`}, false);
+            }
+          }
+          ev.aiGroupDone = true;
+        }
+        const champ = eventTop(ev.table,1)[0];
+        addNewsItem("result", `${champ} win ${ev.name}${ev.sponsor?` (presented by ${ev.sponsor})`:""}!`);
+        STATE.currentEvent = null;
+        generateNextEvent();
+      }
+    }
   }
   save();
 }
@@ -1194,6 +1384,8 @@ function freshState(){
     lastXI: {},
     socialFeed: [],
     homeGround: {},
+    currentYear: 2026,
+    sponsors: {},
     records: null, // computed lazily
     settings: { commentaryDetail:"full" },
   };
@@ -1209,6 +1401,11 @@ function ensureSquads(){
       if(!p.injury) p.injury = { injured:false, daysLeft:0, type:null };
       if(p.formTrend===undefined) p.formTrend = "flat";
       if(p.personalCoach===undefined) p.personalCoach = false;
+      if(p.bowlSpecialty===undefined){
+        if(p.bowlType==="pace") p.bowlSpecialty = pick(["Death Overs Specialist","Death Overs Specialist","Powerplay Specialist",null]);
+        else if(p.bowlType==="spin") p.bowlSpecialty = pick(["Middle Overs Specialist","Middle Overs Specialist","Middle Overs Specialist",null]);
+        else p.bowlSpecialty = null;
+      }
     });
   });
   STATE.staff = STATE.staff || {};
@@ -1226,6 +1423,8 @@ function ensureSquads(){
   STATE.lastXI = STATE.lastXI || {};
   STATE.socialFeed = STATE.socialFeed || [];
   STATE.homeGround = STATE.homeGround || {};
+  if(STATE.currentYear===undefined) STATE.currentYear = 2026;
+  STATE.sponsors = STATE.sponsors || {};
   if(STATE.staff){
     Object.keys(STATE.staff).forEach(team=>{
       const st = STATE.staff[team];
@@ -1292,7 +1491,7 @@ function render(){
   main.appendChild(screenNode);
   app.appendChild(main);
 
-  if(["squadHome","careerHub","training","staffHub","rivalries","playerStats","teamMaps","teamVenues","hallOfFame","scoutHub","droppedPlayers","socialLife","socialPlayers","socialPlayersTeam","selectHomeGround","hireCoach"].includes(SCREEN)){
+  if(["squadHome","careerHub","training","staffHub","rivalries","playerStats","teamMaps","teamVenues","hallOfFame","scoutHub","droppedPlayers","socialLife","socialPlayers","socialPlayersTeam","selectHomeGround","hireCoach","sponsorsHub","signSponsor","createTournament"].includes(SCREEN)){
     app.appendChild(bottomNav());
   }
   LAST_SCREEN = SCREEN;
@@ -1371,6 +1570,73 @@ SCREENS.mainmenu = function(){
   const card = el("div","card brass");
   card.innerHTML = `<h3>How this works</h3><div class="rowline"><span class="label">Save data</span><span class="val">Local Storage</span></div><div class="rowline"><span class="label">Graphics</span><span class="val">None — pure text</span></div><div class="rowline"><span class="label">Designed for</span><span class="val">Mobile browsers</span></div>`;
   s.appendChild(card);
+
+  const legalRow = el("div","btnrow");
+  const privBtn = el("button","btn small outline","Privacy Policy");
+  privBtn.onclick = ()=>goto("privacyPolicy");
+  const tosBtn = el("button","btn small outline","Terms & Conditions");
+  tosBtn.onclick = ()=>goto("termsConditions");
+  legalRow.appendChild(privBtn); legalRow.appendChild(tosBtn);
+  s.appendChild(legalRow);
+
+  return s;
+};
+
+SCREENS.privacyPolicy = function(){
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","LEGAL"));
+  s.appendChild(el("h1","pagetitle","Privacy Policy"));
+  s.appendChild(el("p","pagesub","Last updated: " + new Date().toISOString().slice(0,10)));
+
+  const c1 = el("div","card brass");
+  c1.innerHTML = `<h3>Short version</h3><p class="small" style="margin:0;">Cricket Manager 26 does not collect, transmit, sell, or share any of your data. Everything you do here stays on your own device.</p>`;
+  s.appendChild(c1);
+
+  const sections = [
+    ["What data this game stores", "All progress — your squads, players, match history, finances, and settings — is saved using your browser's Local Storage, on your device only. This game has no server, no account system, and nothing you do here is ever sent anywhere."],
+    ["No collection of personal information", "This game does not ask for or store your name, email, location, or any other personal information. The \"Manager Name\" field is just flavor text kept in your own Local Storage."],
+    ["No tracking, analytics, or ads", "There are no analytics scripts, tracking pixels, cookies, or advertising in this game."],
+    ["No network requests", "The game runs entirely offline once loaded. It does not fetch data from, or send data to, any external server."],
+    ["Clearing your data", "You can permanently erase all saved progress at any time using \"Reset Save Data\" in Settings, or by clearing your browser's site data/Local Storage for this page."],
+    ["Third parties", "Since no data ever leaves your device, none of your information is available to the developer or any third party."],
+    ["Changes to this policy", "If this file is updated in the future, an updated policy would be included with it. Since the game works entirely offline, you control which version you're using."],
+  ];
+  sections.forEach(([title,body])=>{
+    const c = el("div","card");
+    c.innerHTML = `<h3>${title}</h3><p class="small" style="margin:0;">${body}</p>`;
+    s.appendChild(c);
+  });
+
+  const back = el("button","btn leather","Back to Menu");
+  back.onclick = ()=>goto("mainmenu");
+  s.appendChild(back);
+  return s;
+};
+
+SCREENS.termsConditions = function(){
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","LEGAL"));
+  s.appendChild(el("h1","pagetitle","Terms & Conditions"));
+  s.appendChild(el("p","pagesub","Last updated: " + new Date().toISOString().slice(0,10)));
+
+  const sections = [
+    ["Fictional content", "All players, coaches, and squads in Cricket Manager 26 are procedurally generated and entirely fictional. Any resemblance to real people, living or deceased, is coincidental. Team names, national flags, and real stadium names are used for setting and context only; this is an unofficial fan-made simulation with no affiliation to, or endorsement by, any cricket board, league, player, or venue."],
+    ["Entertainment purposes only", "This game is provided purely for entertainment. Statistics, ratings, financial figures, and match outcomes are simulated for gameplay and have no bearing on real-world cricket, finance, or sports data."],
+    ["No warranty", "This game is provided \"as is,\" with no warranty of any kind, express or implied, including fitness for a particular purpose or uninterrupted, error-free operation."],
+    ["Your save data", "Your save is stored only in your browser's Local Storage. You are responsible for backing it up if you care about keeping it — clearing your browser data, using a different browser, or using private/incognito mode may remove it permanently."],
+    ["Player editing feature", "The in-game Player Editor lets you rename generated players. Any names you enter are your own choice and responsibility; this game does not supply or endorse the use of real people's names."],
+    ["Acceptable use", "Please don't use this game to create or distribute content that is defamatory, harassing, or otherwise unlawful. The developer is not responsible for content you personally choose to type into editable fields such as player names."],
+    ["Changes", "These terms may be updated alongside future versions of the game."],
+  ];
+  sections.forEach(([title,body])=>{
+    const c = el("div","card");
+    c.innerHTML = `<h3>${title}</h3><p class="small" style="margin:0;">${body}</p>`;
+    s.appendChild(c);
+  });
+
+  const back = el("button","btn leather","Back to Menu");
+  back.onclick = ()=>goto("mainmenu");
+  s.appendChild(back);
   return s;
 };
 
@@ -1549,13 +1815,25 @@ SCREENS.seriesSquadSelect = function(){
   s.appendChild(el("h1","pagetitle","Select Your 14"));
   s.appendChild(el("p","pagesub", `Choose the 14-player squad for this ${eventLabel}. You'll pick your matchday XI from this group before each match. Selected: ${sq14.length}/14.`));
 
+  const pickModeRow = el("div","btnrow");
+  const manualBtn = el("button","btn small outline","✏️ Manual Pick");
+  manualBtn.onclick = ()=>{ SCREEN_ARGS._squad14 = []; goto("seriesSquadSelect", SCREEN_ARGS); };
+  const autoBtn = el("button","btn small leather","✅ Auto Pick (Strongest 14)");
+  autoBtn.onclick = ()=>{
+    SCREEN_ARGS._squad14 = autoPickStrongestSquad14(squad);
+    toast("Strongest available squad selected.");
+    goto("seriesSquadSelect", SCREEN_ARGS);
+  };
+  pickModeRow.appendChild(manualBtn); pickModeRow.appendChild(autoBtn);
+  s.appendChild(pickModeRow);
+
   const list = el("ul","plist");
   squad.forEach(p=>{
     const idx = sq14.indexOf(p.id);
     const isInjured = p.injury.injured;
     const row = el("li","prow" + (idx>-1?" selected":""));
     if(isInjured) row.style.opacity = "0.45";
-    row.innerHTML = `<div><span class="pname">${p.name}</span> <span class="small" style="color:var(--ink-soft);">Age ${p.age}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span></div>
+    row.innerHTML = `<div><span class="pname">${p.name}</span> <span class="small" style="color:var(--ink-soft);">Age ${p.age}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span> ${specialtyBadge(p)}</div>
       <div class="pstats">OVR ${p.overall}${formLabel(p)}</div>`;
     row.onclick = ()=>{
       if(isInjured){ toast(`${p.name} is injured for ${p.injury.daysLeft} more match(es).`); return; }
@@ -1627,6 +1905,18 @@ SCREENS.xiSelect14 = function(){
   reqCard.innerHTML = `<div class="rowline"><span class="label">Wicketkeepers</span><span class="val">${wkCount>=1?"✓":"✗"} ${wkCount}</span></div><div class="rowline"><span class="label">Bowling options</span><span class="val">${bowlCapable>=5?"✓":"✗"} ${bowlCapable}/5+</span></div>`;
   s.appendChild(reqCard);
 
+  const pickModeRow = el("div","btnrow");
+  const manualBtn = el("button","btn small outline","✏️ Manual Pick");
+  manualBtn.onclick = ()=>{ SCREEN_ARGS._xi = []; goto("xiSelect14", SCREEN_ARGS); };
+  const autoBtn = el("button","btn small leather","✅ Auto Pick (Strongest XI)");
+  autoBtn.onclick = ()=>{
+    SCREEN_ARGS._xi = autoPickStrongestXI(pool);
+    toast("Strongest available XI selected.");
+    goto("xiSelect14", SCREEN_ARGS);
+  };
+  pickModeRow.appendChild(manualBtn); pickModeRow.appendChild(autoBtn);
+  s.appendChild(pickModeRow);
+
   if(xi.length===0 && STATE.lastXI[team]){
     const prevBtn = el("button","btn outline","Continue with Previous Match Squad");
     prevBtn.onclick = ()=>{
@@ -1645,7 +1935,7 @@ SCREENS.xiSelect14 = function(){
     const isCaptain = ev.seriesCaptain===p.id;
     const row = el("li","prow" + (idx>-1?" selected":""));
     if(isInjured) row.style.opacity = "0.45";
-    row.innerHTML = `<div><span class="pname">${idx>-1 ? (idx+1)+". " : ""}${p.name}${isCaptain?" (C)":""}${isInjured?" (INJURED)":""}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span></div>
+    row.innerHTML = `<div><span class="pname">${idx>-1 ? (idx+1)+". " : ""}${p.name}${isCaptain?" (C)":""}${isInjured?" (INJURED)":""}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span> ${specialtyBadge(p)}</div>
       <div class="pstats">OVR ${p.overall}${formLabel(p)}</div>`;
     row.onclick = ()=>{
       if(isInjured){ toast(`${p.name} is injured for ${p.injury.daysLeft} more match(es).`); return; }
@@ -1657,7 +1947,7 @@ SCREENS.xiSelect14 = function(){
   });
   s.appendChild(list);
 
-  const cont = el("button","btn leather","Confirm XI & Continue");
+  const cont = el("button","btn leather","Confirm XI & Set Bowling Plan");
   cont.disabled = xi.length!==11 || wkCount<1 || bowlCapable<5;
   cont.onclick = ()=>{
     const benched = pool.filter(p=>!xi.includes(p.id) && p.career.matches>=5);
@@ -1667,8 +1957,7 @@ SCREENS.xiSelect14 = function(){
     const resolvedCaptain = xi.includes(ev.seriesCaptain) ? ev.seriesCaptain : pool.filter(p=>xi.includes(p.id)).sort((a,b)=>b.overall-a.overall)[0].id;
     STATE.lastXI[team] = { xi: xi.slice(), captain: resolvedCaptain };
     const args = { mode:fixture.mode, userTeam:team, oppTeam:fixture.opponent, _venue:fixture.venue, _venueHomeTeam:fixture.venueHomeTeam, _fixture:fixture, _xi:xi.slice(), _captain:resolvedCaptain };
-    args._conditions = genConditions(fixture.venue);
-    goto("conditionsScreen", args);
+    goto("bowlingPlanScreen", args);
   };
   s.appendChild(cont);
   return s;
@@ -1679,7 +1968,7 @@ SCREENS.eventTable = function(){
   const ev = STATE.currentEvent;
   const stageLabel = { group:"Group stage", semis:"Semi-Final stage", final:"Final stage" }[ev.stage] || "Group stage";
   const s = el("div","screen");
-  s.appendChild(el("div","eyebrow", ev.type==="worldcup" ? (ev.cupName||"WORLD CUP") : "TRI-SERIES"));
+  s.appendChild(el("div","eyebrow", ev.type==="worldcup" ? (ev.cupName||"WORLD CUP") : ev.type==="custom" ? (ev.name||"TOURNAMENT").toUpperCase() : "TRI-SERIES"));
   s.appendChild(el("h1","pagetitle","Points Table"));
   s.appendChild(el("p","pagesub", "Hosted by " + ev.host + " · " + stageLabel));
   const table = el("table","stattable");
@@ -1695,6 +1984,64 @@ SCREENS.eventTable = function(){
     ).join("");
     s.appendChild(semiCard);
   }
+  return s;
+};
+
+/* ---------- BOWLING PLAN (preset bowlers per phase: Auto / Manual) ---------- */
+SCREENS.bowlingPlanScreen = function(){
+  const { userTeam } = SCREEN_ARGS;
+  const squad = STATE.squads[userTeam];
+  const xiPlayers = SCREEN_ARGS._xi.map(id=>squad.find(p=>p.id===id)).filter(Boolean);
+  const bowlers = xiPlayers.filter(p=>p.role==="Bowler"||p.role==="All-Rounder");
+  if(!SCREEN_ARGS._bowlingPreset) SCREEN_ARGS._bowlingPreset = { mode:"auto", powerplay:[], middle:[], death:[] };
+  const preset = SCREEN_ARGS._bowlingPreset;
+
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","BOWLING PLAN"));
+  s.appendChild(el("h1","pagetitle","Set Your Bowling Plan"));
+  s.appendChild(el("p","pagesub","Choose Auto to let the captain manage bowling changes, or set a Manual plan assigning bowlers to each phase."));
+
+  const modeRow = el("div","stratrow");
+  ["auto","manual"].forEach(m=>{
+    const b = el("button", preset.mode===m?"active":"", m==="auto"?"Auto":"Manual Preset");
+    b.onclick = ()=>{ preset.mode = m; goto("bowlingPlanScreen", SCREEN_ARGS); };
+    modeRow.appendChild(b);
+  });
+  s.appendChild(modeRow);
+
+  if(preset.mode==="auto"){
+    s.appendChild(el("p","small","The captain will pick the best available bowler for each phase automatically, factoring in form, matchups and phase specialty."));
+  } else {
+    s.appendChild(el("p","small","Tap a phase chip on each bowler to assign them to it. A bowler can be assigned to more than one phase."));
+    bowlers.forEach(p=>{
+      const card = el("div","card");
+      card.innerHTML = `<h3>${p.name}</h3><p class="small" style="margin:0 0 6px 0;color:var(--ink-soft);">${p.role}${p.bowlType?" · "+p.bowlType:""} · BWL ${p.bowlSkill} ${specialtyBadge(p)}</p>`;
+      const row = el("div","stratrow");
+      [["powerplay","Powerplay"],["middle","Middle"],["death","Death"]].forEach(([key,label])=>{
+        const active = preset[key].includes(p.id);
+        const b = el("button", active?"active":"", label);
+        b.onclick = ()=>{
+          const idx = preset[key].indexOf(p.id);
+          if(idx>-1) preset[key].splice(idx,1); else preset[key].push(p.id);
+          goto("bowlingPlanScreen", SCREEN_ARGS);
+        };
+        row.appendChild(b);
+      });
+      card.appendChild(row);
+      s.appendChild(card);
+    });
+  }
+
+  const cont = el("button","btn leather","Continue");
+  cont.onclick = ()=>{
+    if(SCREEN_ARGS._fixture){
+      SCREEN_ARGS._conditions = genConditions(SCREEN_ARGS._venue);
+      goto("conditionsScreen", SCREEN_ARGS);
+    } else {
+      goto("venueSelect", SCREEN_ARGS);
+    }
+  };
+  s.appendChild(cont);
   return s;
 };
 
@@ -1715,6 +2062,18 @@ SCREENS.xiSelect = function(){
   reqCard.innerHTML = `<div class="rowline"><span class="label">Wicketkeepers</span><span class="val">${wkCount>=1?"✓":"✗"} ${wkCount}</span></div><div class="rowline"><span class="label">Bowling options</span><span class="val">${bowlCapable>=5?"✓":"✗"} ${bowlCapable}/5+</span></div>`;
   s.appendChild(reqCard);
 
+  const pickModeRow = el("div","btnrow");
+  const manualBtn = el("button","btn small outline","✏️ Manual Pick");
+  manualBtn.onclick = ()=>{ SCREEN_ARGS._xi = []; goto("xiSelect", SCREEN_ARGS); };
+  const autoBtn = el("button","btn small leather","✅ Auto Pick (Strongest XI)");
+  autoBtn.onclick = ()=>{
+    SCREEN_ARGS._xi = autoPickStrongestXI(squad);
+    toast("Strongest available XI selected.");
+    goto("xiSelect", SCREEN_ARGS);
+  };
+  pickModeRow.appendChild(manualBtn); pickModeRow.appendChild(autoBtn);
+  s.appendChild(pickModeRow);
+
   if(xi.length===0 && STATE.lastXI[userTeam]){
     const prevBtn = el("button","btn outline","Continue with Previous Match Squad");
     prevBtn.onclick = ()=>{
@@ -1733,7 +2092,7 @@ SCREENS.xiSelect = function(){
     const isInjured = p.injury.injured;
     const row = el("li","prow" + (idx>-1?" selected":""));
     if(isInjured) row.style.opacity = "0.45";
-    row.innerHTML = `<div><span class="pname">${idx>-1 ? (idx+1)+". " : ""}${p.name}${isInjured?" (INJURED)":""}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span></div>
+    row.innerHTML = `<div><span class="pname">${idx>-1 ? (idx+1)+". " : ""}${p.name}${isInjured?" (INJURED)":""}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span> ${specialtyBadge(p)}</div>
       <div class="pstats">OVR ${p.overall}<br>BAT ${p.batSkill} / BWL ${p.bowlSkill}${formLabel(p)}</div>`;
     row.onclick = ()=>{
       if(isInjured){ toast(`${p.name} is injured for ${p.injury.daysLeft} more match(es).`); return; }
@@ -1768,17 +2127,12 @@ SCREENS.captainSelect = function(){
     list.appendChild(row);
   });
   s.appendChild(list);
-  const cont = el("button","btn leather", SCREEN_ARGS._fixture ? "Confirm & Continue" : "Confirm & Choose Venue");
+  const cont = el("button","btn leather", "Confirm & Set Bowling Plan");
   cont.disabled = !SCREEN_ARGS._captain;
   cont.onclick = ()=>{
     STATE.lastXI[userTeam] = { xi: SCREEN_ARGS._xi.slice(), captain: SCREEN_ARGS._captain };
     save();
-    if(SCREEN_ARGS._fixture){
-      SCREEN_ARGS._conditions = genConditions(SCREEN_ARGS._venue);
-      goto("conditionsScreen", SCREEN_ARGS);
-    } else {
-      goto("venueSelect", SCREEN_ARGS);
-    }
+    goto("bowlingPlanScreen", SCREEN_ARGS);
   };
   s.appendChild(cont);
   return s;
@@ -1963,6 +2317,20 @@ function ensureBstat(inn,id){ if(!inn.bstats[id]) inn.bstats[id]={runs:0,balls:0
 function ensureBowlStat(inn,id){ if(!inn.bowlerStats[id]) inn.bowlerStats[id]={balls:0,runs:0,wkts:0,curOverRuns:0,maidens:0}; return inn.bowlerStats[id]; }
 
 function pickNextBowler(inn){
+  const bowlTeam = teamOfXi(inn.bowlingXi);
+  const preset = MATCH.bowlingPreset && MATCH.bowlingPreset[bowlTeam];
+  if(preset && preset.mode==="manual"){
+    const phaseKey = phaseOf(inn);
+    const designated = (preset[phaseKey]||[])
+      .map(id=>inn.bowlingXi.find(p=>p.id===id))
+      .filter(Boolean)
+      .filter(p=>p.id!==inn.lastBowlerId);
+    if(designated.length){
+      const weights = designated.map(p=>[p.id, Math.max(5,p.bowlSkill)]);
+      return weightedPick(weights);
+    }
+    // No valid designated bowler for this phase (e.g. all already bowled last over) — fall through to auto logic.
+  }
   const pool = buildBowlingOrder(inn.bowlingXi).filter(p=>p.id!==inn.lastBowlerId);
   const use = pool.length? pool : buildBowlingOrder(inn.bowlingXi);
   // Weighted toward better bowlers, slight randomness
@@ -2032,6 +2400,7 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
   effBat += staffBattingBonus(teamOfXi(inn.battingXi));
   effBowl += staffBowlingBonus(teamOfXi(inn.bowlingXi));
   effBat += staffAssistantBonus(teamOfXi(inn.battingXi));
+  effBat += sponsorBattingBonus(teamOfXi(inn.battingXi));
   effBowl += staffAssistantBonus(teamOfXi(inn.bowlingXi));
 
   // pitch matchup
@@ -2051,7 +2420,11 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
   let boundaryBoost = 0, wicketBoost = 0;
   boundaryBoost -= staffFieldingBonus(teamOfXi(inn.bowlingXi));
   if(phase==="powerplay") boundaryBoost += 3;
-  if(phase==="death"){ boundaryBoost += 6; wicketBoost += 3; }
+  if(phase==="death"){ boundaryBoost += 6; wicketBoost += 2; }
+  // Phase specialists earn their tag: a bowler bowling in their specialty phase gets a real edge.
+  if(bowlerP.bowlSpecialty==="Death Overs Specialist" && phase==="death") effBowl += 4;
+  if(bowlerP.bowlSpecialty==="Middle Overs Specialist" && phase==="middle") effBowl += 3;
+  if(bowlerP.bowlSpecialty==="Powerplay Specialist" && phase==="powerplay") effBowl += 3;
   // ODIs are a longer game — batters build an innings and rotate the strike through the middle overs
   // rather than attacking every ball the way a T20 lineup would.
   if(MATCH.mode==="ODI" && phase==="middle"){ boundaryBoost -= 4; }
@@ -2059,12 +2432,12 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
   const stratMap = {Defensive:-6, Balanced:0, Aggressive:6, "Ultra Aggressive":13};
   const bStrat = stratMap[battingStrategy] ?? 0;
   boundaryBoost += bStrat*0.9;
-  wicketBoost += Math.max(0,bStrat)*0.6;
-  if(bStrat<0) wicketBoost -= 2;
+  wicketBoost += Math.max(0,bStrat)*0.4;
+  if(bStrat<0) wicketBoost -= 1.5;
 
   const bowlStratMap = {Defensive:-4, Balanced:0, Attacking:6};
   const bwStrat = bowlStratMap[bowlingStrategy] ?? 0;
-  wicketBoost += bwStrat*0.5;
+  wicketBoost += bwStrat*0.35;
   if(bwStrat<0) boundaryBoost -= 2; else boundaryBoost += bwStrat*0.4;
 
   // required run rate pressure (chasing)
@@ -2073,7 +2446,7 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
     const remRuns = inn.target - inn.runs;
     if(remBalls>0){
       const reqRR = (remRuns/remBalls)*6;
-      if(reqRR>10){ boundaryBoost += 5; wicketBoost += 3; }
+      if(reqRR>10){ boundaryBoost += 5; wicketBoost += 2; }
       else if(reqRR<4){ boundaryBoost -= 3; }
     }
   }
@@ -2087,17 +2460,33 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
     return {consumesBall:false, over:false};
   }
 
-  // base weights
-  let w = {
-    0: 37 - edge*8 + Math.max(0,-boundaryBoost)*0.5,
-    1: 28,
-    2: 9,
-    3: 2,
-    4: 12 + edge*7 + boundaryBoost,
-    6: 5 + edge*5 + Math.max(0,boundaryBoost-3),
-    W: 6 - edge*3 + wicketBoost*0.6,
-  };
-  Object.keys(w).forEach(k=>w[k]=Math.max(0.5,w[k]));
+  // Base outcome weights. ODI gets its own profile rather than a scaled-down T20 one — a 50-over
+  // innings needs a meaningfully lower per-ball scoring AND wicket rate to land around a realistic
+  // 240-290 with ~7 wickets down, instead of either collapsing early or racing to 350+.
+  let w;
+  if(MATCH.mode==="ODI"){
+    const bb = boundaryBoost*0.5, wb = wicketBoost*0.5;
+    w = {
+      0: 45 - edge*6 + Math.max(0,-bb)*0.6,
+      1: 25,
+      2: 7,
+      3: 1.5,
+      4: 7 + edge*5 + bb,
+      6: 2 + edge*3 + Math.max(0,bb-2),
+      W: 2.4 - edge*1.2 + wb*0.5,
+    };
+  } else {
+    w = {
+      0: 34 - edge*8 + Math.max(0,-boundaryBoost)*0.5,
+      1: 29,
+      2: 9,
+      3: 2,
+      4: 13 + edge*7 + boundaryBoost,
+      6: 6 + edge*5 + Math.max(0,boundaryBoost-3),
+      W: 3.2 - edge*1.8 + wicketBoost*0.4,
+    };
+  }
+  Object.keys(w).forEach(k=>w[k]=Math.max(0.4,w[k]));
 
   const outcome = weightedPick(Object.entries(w).map(([k,v])=>[k, v]));
 
@@ -2173,6 +2562,7 @@ function startMatch(args, battingFirstTeam){
     userXi, oppXi, userCaptain: _captain,
     battingFirstTeam,
     fixtureRef: args._fixture || null,
+    bowlingPreset: { [userTeam]: args._bowlingPreset || { mode:"auto" } },
     innings: [],
     currentInningsIdx: 0,
     maxOvers,
@@ -2207,6 +2597,36 @@ function pickAiXi(squad){
   xi.push(...allr.slice(0,3));
   xi.push(...bowlers.slice(0,4));
   return xi.filter(Boolean).slice(0,11).sort((a,b)=>b.batSkill-a.batSkill);
+}
+
+// Auto Pick (strongest XI/squad) helpers used by the manual/auto buttons on selection screens.
+function fillToCount(combined, pool, count){
+  const seen = new Set(combined.map(p=>p.id));
+  const rest = pool.filter(p=>!seen.has(p.id)).sort((a,b)=>b.overall-a.overall);
+  while(combined.length<count && rest.length) combined.push(rest.shift());
+  return combined.slice(0,count);
+}
+function autoPickStrongestXI(pool){
+  const avail = pool.filter(p=>!p.injury.injured);
+  const usable = avail.length>=11 ? avail : pool;
+  const keepers = usable.filter(p=>p.role==="Wicketkeeper").sort((a,b)=>b.overall-a.overall);
+  const bowlers = usable.filter(p=>p.role==="Bowler").sort((a,b)=>b.overall-a.overall);
+  const allr = usable.filter(p=>p.role==="All-Rounder").sort((a,b)=>b.overall-a.overall);
+  const bats = usable.filter(p=>p.role==="Batter").sort((a,b)=>b.overall-a.overall);
+  let xi = [keepers[0], ...bats.slice(0,5), ...allr.slice(0,3), ...bowlers.slice(0,4)].filter(Boolean);
+  xi = fillToCount(xi, usable, 11);
+  return xi.map(p=>p.id);
+}
+function autoPickStrongestSquad14(pool){
+  const avail = pool.filter(p=>!p.injury.injured);
+  const usable = avail.length>=14 ? avail : pool;
+  const keepers = usable.filter(p=>p.role==="Wicketkeeper").sort((a,b)=>b.overall-a.overall);
+  const bowlers = usable.filter(p=>p.role==="Bowler").sort((a,b)=>b.overall-a.overall);
+  const allr = usable.filter(p=>p.role==="All-Rounder").sort((a,b)=>b.overall-a.overall);
+  const bats = usable.filter(p=>p.role==="Batter").sort((a,b)=>b.overall-a.overall);
+  let squad14 = [...keepers.slice(0,2), ...bats.slice(0,6), ...allr.slice(0,3), ...bowlers.slice(0,5)].filter(Boolean);
+  squad14 = fillToCount(squad14, usable, 14);
+  return squad14.map(p=>p.id);
 }
 
 function currentInnings(){ return MATCH.innings[MATCH.currentInningsIdx]; }
@@ -2365,7 +2785,7 @@ function applyCareerUpdates(){
       else if(idx<prevIdx) formChanges.down.push({ name:p.name, team });
 
       // ---- injury chance, reduced by a good physio ----
-      const injuryChance = clamp(0.025 - (physioRating-70)/3500, 0.006, 0.05);
+      const injuryChance = clamp(0.025 - (physioRating-70)/3500 - sponsorInjuryReduction(team), 0.006, 0.05);
       if(!p.injury.injured && Math.random() < injuryChance){
         const recoveryCut = physioRating>=85 ? 1 : 0;
         p.injury = { injured:true, daysLeft: Math.max(1, randi(1,4)-recoveryCut), type: pick(INJURY_TYPES) };
@@ -2415,6 +2835,9 @@ function ageUpSeasonIfDue(){
       STATE.squads[team].forEach(p=>{ p.age += 1; });
     });
     tickCoachContracts();
+    tickSponsorContracts();
+    STATE.currentYear = (STATE.currentYear||2026) + 1;
+    addNewsItem("result", `A new season begins — welcome to ${STATE.currentYear}! Every player is a year older.`);
   }
 }
 
@@ -2818,7 +3241,7 @@ SCREENS.squadHome = function(){
   const list = el("ul","plist");
   squad.slice().sort((a,b)=>b.overall-a.overall).forEach(p=>{
     const row = el("li","prow");
-    row.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${playerAvatarSVG(p,40)}<div><span class="pname">${p.name}</span> <span class="small" style="color:var(--ink-soft);">Age ${p.age}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span></div></div>
+    row.innerHTML = `<div style="display:flex;align-items:center;gap:10px;">${playerAvatarSVG(p,40)}<div><span class="pname">${p.name}</span> <span class="small" style="color:var(--ink-soft);">Age ${p.age}</span><br><span class="prole">${p.role}${p.bowlType?" · "+p.bowlType:""}</span> ${specialtyBadge(p)}</div></div>
       <div class="pstats">OVR ${p.overall}<br>BAT ${p.batSkill} / BWL ${p.bowlSkill}<br>${formLabel(p)}${p.injury.injured?` · <span class="badge outofform">INJURED (${p.injury.daysLeft})</span>`:""}</div>`;
     row.onclick = ()=>goto("playerProfile", {playerId:p.id, team});
     list.appendChild(row);
@@ -2880,6 +3303,7 @@ SCREENS.playerProfile = function(){
   card.innerHTML = `<h3>Attributes</h3>
     <div class="rowline"><span class="label">Batting Skill</span><span class="val">${p.batSkill}</span></div>
     <div class="rowline"><span class="label">Bowling Skill</span><span class="val">${p.bowlSkill}</span></div>
+    ${p.bowlSpecialty?`<div class="rowline"><span class="label">Specialty</span><span class="val">${specialtyBadge(p)}</span></div>`:""}
     <div class="rowline"><span class="label">Fitness</span><span class="val">${p.fitness}</span></div>
     <div class="rowline"><span class="label">Form</span><span class="val">${p.form} ${formArrow(p.formTrend)}</span></div>
     <div class="rowline"><span class="label">Age</span><span class="val">${p.age}${p.age>=35?" (veteran — form may decline)":""}</span></div>
@@ -3113,27 +3537,52 @@ SCREENS.careerHub = function(){
   const team = STATE.managedTeam || STATE._activeTeam || Object.keys(STATE.squads)[0];
   ensureFinance(team);
   if(STATE.managedTeam && STATE.schedule.length===0 && !STATE.currentEvent) generateNextEvent();
+  const fin = STATE.finance[team];
 
-  s.appendChild(el("div","eyebrow","TEAM DASHBOARD"));
-  s.appendChild(el("h1","pagetitle", flagOf(team) + " " + team));
-  s.appendChild(el("p","pagesub", STATE.profile.managerName + "'s Career · " + STATE.matchHistory.length + " matches managed"));
+  // ---------- HERO BANNER ----------
+  const hero = el("div","dash-hero");
+  hero.innerHTML = `
+    <div class="dh-top">
+      <span class="dh-flag">${flagOf(team)}</span>
+      <span class="dh-season">Season ${STATE.currentYear}</span>
+    </div>
+    <div class="dh-name">${team}</div>
+    <div class="dh-sub">${STATE.profile.managerName}'s Career · ${STATE.matchHistory.length} matches managed</div>
+  `;
+  s.appendChild(hero);
 
-  const saveBtn = el("button","btn brass","Save Game");
+  const saveBtn = el("button","btn brass","💾 Save Game");
   saveBtn.onclick = ()=>{ save(); toast("Game saved."); };
   s.appendChild(saveBtn);
 
+  // ---------- KEY STATS GRID ----------
+  const statGrid = el("div","stat-grid");
+  const tiles = [
+    ["accent-purple","FANBASE", ensureFanbase(team).toLocaleString()],
+    ["accent-gold","CLUB BALANCE", "$"+fin.balance.toLocaleString()],
+    ["accent-blue","SQUAD RATING", squadAvg(team)],
+    ["accent-green","LAST 5", recentFormChips(team)],
+  ];
+  tiles.forEach(([cls,label,val])=>{
+    const tile = el("div","stat-tile "+cls);
+    tile.innerHTML = `<div class="stat-label">${label}</div><div class="stat-value">${val}</div>`;
+    statGrid.appendChild(tile);
+  });
+  s.appendChild(statGrid);
+
+  // ---------- NEXT FIXTURE ----------
   if(STATE.schedule.length>0){
     const fixture = STATE.schedule[0];
     const ev = STATE.currentEvent;
-    const eventLabel = { bilateral:"Bilateral Series", tri:"Tri-Series", worldcup: (ev&&ev.cupName)||"World Cup" }[fixture.kind] || "Fixture";
-    const fxCard = el("div","card pitchline");
-    fxCard.innerHTML = `<h3>Next Fixture — ${eventLabel}</h3>
-      <div class="rowline"><span class="label">Match</span><span class="val">${fixture.label}</span></div>
+    const eventLabel = { bilateral:"Bilateral Series", tri:"Tri-Series", worldcup: (ev&&ev.cupName)||"World Cup", custom: (ev&&ev.name)||"Custom Tournament" }[fixture.kind] || "Fixture";
+    const fxCard = el("div","fixture-hero");
+    fxCard.innerHTML = `<div class="fh-tag">Next Fixture · ${eventLabel}</div>
+      <div class="fh-title">${fixture.label}</div>
       <div class="rowline"><span class="label">Format</span><span class="val">${fixture.mode}</span></div>
-      <div class="rowline"><span class="label">Host Country</span><span class="val">${fixture.host}</span></div>
+      <div class="rowline"><span class="label">Host Country</span><span class="val">${flagOf(fixture.host)} ${fixture.host}</span></div>
       <div class="rowline"><span class="label">Venue</span><span class="val">${fixture.venue.name}</span></div>`;
     s.appendChild(fxCard);
-    const nextBtn = el("button","btn leather","Next: Play This Match");
+    const nextBtn = el("button","btn leather","▶ Next: Play This Match");
     nextBtn.onclick = ()=>{
       if(ev && !ev.squad14){
         goto("seriesSquadSelect", { fixture, team });
@@ -3144,34 +3593,26 @@ SCREENS.careerHub = function(){
       }
     };
     s.appendChild(nextBtn);
-    if(ev && (ev.type==="tri" || ev.type==="worldcup")){
-      const tableBtn = el("button","btn small outline","View Points Table");
+    if(ev && (ev.type==="tri" || ev.type==="worldcup" || (ev.type==="custom" && ev.customKind==="roundrobin"))){
+      const tableBtn = el("button","btn small outline","📊 View Points Table");
       tableBtn.onclick = ()=>goto("eventTable");
       s.appendChild(tableBtn);
     }
   }
 
+  // ---------- CLUB DETAIL CARDS ----------
   const teamCard = el("div","card");
   teamCard.innerHTML = `<h3>Club Overview</h3>
     <div class="rowline"><span class="label">Home Ground</span><span class="val">${STATE.homeGround[team] || "Not set"}</span></div>
-    <div class="rowline"><span class="label">Fanbase</span><span class="val">${ensureFanbase(team).toLocaleString()}</span></div>
-    <div class="rowline"><span class="label">Last 5 Games</span><span class="val">${recentFormChips(team)}</span></div>
-    <div class="rowline"><span class="label">Squad Rating</span><span class="val">${squadAvg(team)}</span></div>`;
-  s.appendChild(teamCard);
-
-  const finCard = el("div","card brass");
-  const fin = STATE.finance[team];
-  finCard.innerHTML = `<h3>Finances</h3>
     <div class="rowline"><span class="label">Team Value</span><span class="val">$${fin.value.toLocaleString()}</span></div>
-    <div class="rowline"><span class="label">Annual Wage Bill</span><span class="val">$${fin.wageBill.toLocaleString()}</span></div>
-    <div class="rowline"><span class="label">Club Balance</span><span class="val">$${fin.balance.toLocaleString()}</span></div>`;
-  s.appendChild(finCard);
+    <div class="rowline"><span class="label">Annual Wage Bill</span><span class="val">$${fin.wageBill.toLocaleString()}</span></div>`;
+  s.appendChild(teamCard);
 
   const injured = STATE.squads[team].filter(p=>p.injury.injured);
   if(injured.length){
     const injCard = el("div","card leather");
     injCard.style.borderLeftColor = "var(--bad)";
-    injCard.innerHTML = `<h3>Injury Table</h3>` + injured.map(p=>
+    injCard.innerHTML = `<h3>🩹 Injury Table</h3>` + injured.map(p=>
       `<div class="rowline"><span class="label">${p.name}</span><span class="val">${p.injury.type} · ${p.injury.daysLeft} left</span></div>`
     ).join("");
     s.appendChild(injCard);
@@ -3181,53 +3622,42 @@ SCREENS.careerHub = function(){
   newMatchBtn.onclick = ()=>goto("newGameMode");
   s.appendChild(newMatchBtn);
 
-  const navRow = el("div","btnrow");
-  const staffBtn = el("button","btn small outline","Coaching Staff");
-  staffBtn.onclick = ()=>goto("staffHub");
-  const rivalBtn = el("button","btn small outline","Rivalries");
-  rivalBtn.onclick = ()=>goto("rivalries");
-  navRow.appendChild(staffBtn); navRow.appendChild(rivalBtn);
-  s.appendChild(navRow);
-  const navRow2 = el("div","btnrow");
-  const statsBtn = el("button","btn small outline","Player Stats");
-  statsBtn.onclick = ()=>goto("playerStats");
-  const mapsBtn = el("button","btn small outline","Team Maps");
-  mapsBtn.onclick = ()=>goto("teamMaps");
-  navRow2.appendChild(statsBtn); navRow2.appendChild(mapsBtn);
-  s.appendChild(navRow2);
-  const navRow3 = el("div","btnrow");
-  const scoutBtn = el("button","btn small leather","Scout");
-  scoutBtn.onclick = ()=>goto("scoutHub");
-  const eliteBtn = el("button","btn small outline","Elite Players");
-  eliteBtn.onclick = ()=>goto("hallOfFame");
-  navRow3.appendChild(scoutBtn); navRow3.appendChild(eliteBtn);
-  s.appendChild(navRow3);
-  const navRow4 = el("div","btnrow");
-  const droppedBtn = el("button","btn small outline","Dropped Players");
-  droppedBtn.onclick = ()=>goto("droppedPlayers");
-  const socialBtn = el("button","btn small outline","Social Life");
-  socialBtn.onclick = ()=>goto("socialLife");
-  navRow4.appendChild(droppedBtn); navRow4.appendChild(socialBtn);
-  s.appendChild(navRow4);
-  const navRow5 = el("div","btnrow");
-  const groundBtn = el("button","btn small outline","Home Ground");
-  groundBtn.onclick = ()=>goto("selectHomeGround");
-  navRow5.appendChild(groundBtn);
-  s.appendChild(navRow5);
+  // ---------- QUICK ACTIONS ----------
+  const actionsTitle = el("div","section-title","Quick Actions");
+  s.appendChild(actionsTitle);
+  const actions = [
+    ["👔","Coaching Staff","staffHub"],
+    ["⚔️","Rivalries","rivalries"],
+    ["📈","Player Stats","playerStats"],
+    ["🗺️","Team Maps","teamMaps"],
+    ["🔎","Scout","scoutHub"],
+    ["🏆","Elite Players","hallOfFame"],
+    ["📋","Dropped Players","droppedPlayers"],
+    ["💬","Social Life","socialLife"],
+    ["🏟️","Home Ground","selectHomeGround"],
+    ["🤝","Sponsors","sponsorsHub"],
+    ["✨","Create Tournament","createTournament"],
+  ];
+  const actionsGrid = el("div","quick-actions");
+  actions.forEach(([icon,label,dest])=>{
+    const b = el("div","quick-action-btn", `<div class="qa-icon">${icon}</div><div>${label}</div>`);
+    b.onclick = ()=>goto(dest);
+    actionsGrid.appendChild(b);
+  });
+  s.appendChild(actionsGrid);
 
-  const newsHeaderRow = el("div");
-  newsHeaderRow.style.display="flex"; newsHeaderRow.style.justifyContent="space-between"; newsHeaderRow.style.alignItems="center";
-  newsHeaderRow.appendChild(el("h3",null,"Cricket News"));
+  // ---------- NEWS FEED ----------
+  const newsTitle = el("div","section-title","Cricket News");
   if((STATE.newsFeed||[]).length>0){
-    const clearBtn = el("button","btn small outline","Clear News");
+    const clearBtn = el("button","btn small outline st-action","Clear");
     clearBtn.onclick = ()=>{ STATE.newsFeed = []; save(); goto("careerHub"); };
-    newsHeaderRow.appendChild(clearBtn);
+    newsTitle.appendChild(clearBtn);
   }
-  s.appendChild(newsHeaderRow);
+  s.appendChild(newsTitle);
   s.appendChild(renderNewsFeed(8));
 
-  const histTitle = el("h3",null,"Recent Results");
-  s.appendChild(histTitle);
+  // ---------- RECENT RESULTS ----------
+  s.appendChild(el("div","section-title","Recent Results"));
   if(STATE.matchHistory.length===0){
     s.appendChild(el("p","small","No matches played yet."));
   } else {
@@ -3514,6 +3944,162 @@ SCREENS.scoutHub = function(){
   };
   s.appendChild(rescoutBtn);
 
+  return s;
+};
+
+/* ===================== CREATE SERIES / TOURNAMENT ===================== */
+SCREENS.createTournament = function(){
+  const team = STATE.managedTeam;
+  if(!SCREEN_ARGS._name) SCREEN_ARGS._name = "";
+  if(!SCREEN_ARGS._sponsor) SCREEN_ARGS._sponsor = "";
+  if(!SCREEN_ARGS._teams) SCREEN_ARGS._teams = [team];
+  if(!SCREEN_ARGS._mode) SCREEN_ARGS._mode = "T20";
+  if(!SCREEN_ARGS._matchCount) SCREEN_ARGS._matchCount = 3;
+
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","CREATE"));
+  s.appendChild(el("h1","pagetitle","Create Series / Tournament"));
+  s.appendChild(el("p","pagesub","Design your own series or tournament — name it, pick a sponsor, choose the teams and format."));
+
+  const nameInput = el("input");
+  nameInput.type="text"; nameInput.placeholder="Tournament name (e.g. Champions Cup)";
+  nameInput.value = SCREEN_ARGS._name;
+  nameInput.style.width="100%"; nameInput.style.padding="10px"; nameInput.style.marginBottom="8px"; nameInput.style.border="1px solid var(--line)"; nameInput.style.borderRadius="var(--radius)"; nameInput.style.background="var(--paper-2)"; nameInput.style.color="var(--ink)";
+  nameInput.oninput = ()=>{ SCREEN_ARGS._name = nameInput.value; };
+  s.appendChild(nameInput);
+
+  const sponsorInput = el("input");
+  sponsorInput.type="text"; sponsorInput.placeholder="Sponsor name (optional)";
+  sponsorInput.value = SCREEN_ARGS._sponsor;
+  sponsorInput.style.width="100%"; sponsorInput.style.padding="10px"; sponsorInput.style.marginBottom="12px"; sponsorInput.style.border="1px solid var(--line)"; sponsorInput.style.borderRadius="var(--radius)"; sponsorInput.style.background="var(--paper-2)"; sponsorInput.style.color="var(--ink)";
+  sponsorInput.oninput = ()=>{ SCREEN_ARGS._sponsor = sponsorInput.value; };
+  s.appendChild(sponsorInput);
+
+  s.appendChild(el("h3",null,"Format"));
+  const modeRow = el("div","stratrow");
+  ["T20","ODI"].forEach(m=>{
+    const b = el("button", SCREEN_ARGS._mode===m?"active":"", m);
+    b.onclick = ()=>{ SCREEN_ARGS._mode = m; goto("createTournament", SCREEN_ARGS); };
+    modeRow.appendChild(b);
+  });
+  s.appendChild(modeRow);
+
+  s.appendChild(el("h3",null,"Participating Teams (" + SCREEN_ARGS._teams.length + " selected)"));
+  s.appendChild(el("p","small","Your team is locked in. Select at least one more."));
+  const grid = el("div","gridsel");
+  TEAM_LIST.forEach(t=>{
+    const isUser = t===team;
+    const selected = SCREEN_ARGS._teams.includes(t);
+    const opt = el("div","opt" + (selected?" active":""));
+    opt.innerHTML = `${flagOf(t)} ${t}${isUser?" (You)":""}`;
+    if(!isUser){
+      opt.onclick = ()=>{
+        const idx = SCREEN_ARGS._teams.indexOf(t);
+        if(idx>-1) SCREEN_ARGS._teams.splice(idx,1);
+        else SCREEN_ARGS._teams.push(t);
+        goto("createTournament", SCREEN_ARGS);
+      };
+    } else {
+      opt.style.opacity = "0.85";
+    }
+    grid.appendChild(opt);
+  });
+  s.appendChild(grid);
+
+  if(SCREEN_ARGS._teams.length===2){
+    s.appendChild(el("h3",null,"Total Matches"));
+    const matchRow = el("div","stratrow");
+    [3,5,7].forEach(n=>{
+      const b = el("button", SCREEN_ARGS._matchCount===n?"active":"", n+" Matches");
+      b.onclick = ()=>{ SCREEN_ARGS._matchCount = n; goto("createTournament", SCREEN_ARGS); };
+      matchRow.appendChild(b);
+    });
+    s.appendChild(matchRow);
+  } else if(SCREEN_ARGS._teams.length>2){
+    const n = SCREEN_ARGS._teams.length;
+    const totalMatches = n*(n-1)/2;
+    s.appendChild(el("p","small", `Round-robin format — every team plays every other team once. Total matches: ${totalMatches} (you play ${n-1}).`));
+  }
+
+  const startBtn = el("button","btn leather","Start Tournament");
+  startBtn.disabled = !SCREEN_ARGS._name.trim() || SCREEN_ARGS._teams.length<2;
+  startBtn.onclick = ()=>{
+    if(STATE.currentEvent){
+      if(!confirm("This will replace your current series/tournament in progress. Continue?")) return;
+    }
+    startCustomTournament(SCREEN_ARGS._name.trim(), SCREEN_ARGS._sponsor.trim(), SCREEN_ARGS._teams.slice(), SCREEN_ARGS._mode, SCREEN_ARGS._matchCount);
+    toast(`${SCREEN_ARGS._name.trim()} created!`);
+    goto("careerHub");
+  };
+  s.appendChild(startBtn);
+
+  return s;
+};
+
+/* ===================== SPONSORSHIP SCREENS ===================== */
+SCREENS.sponsorsHub = function(){
+  const team = STATE.managedTeam || STATE._activeTeam;
+  const sp = ensureSponsors(team);
+  ensureFinance(team);
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","SPONSORSHIPS"));
+  s.appendChild(el("h1","pagetitle", team + " Sponsors"));
+  s.appendChild(el("p","pagesub","Sponsors pay a signing bonus plus ongoing per-match income. Better tiers also give small in-game perks."));
+  s.appendChild(el("p","small", `Club Balance: $${STATE.finance[team].balance.toLocaleString()}`));
+
+  SPONSOR_CATEGORIES.forEach(cat=>{
+    const current = sp[cat];
+    const card = el("div","card" + (current?" brass":""));
+    if(current){
+      card.innerHTML = `<h3>${SPONSOR_LABEL[cat]}</h3>
+        <div class="rowline"><span class="label">${current.name}</span><span class="val">${current.tier}</span></div>
+        <div class="rowline"><span class="label">Per-Match Income</span><span class="val">$${current.perMatchFee.toLocaleString()}</span></div>
+        <div class="rowline"><span class="label">Contract</span><span class="val">${current.yearsLeft} of ${current.contractYears} yrs left</span></div>`;
+    } else {
+      card.innerHTML = `<h3>${SPONSOR_LABEL[cat]}</h3><p class="small" style="margin:0;">No sponsor signed.</p>`;
+    }
+    const btn = el("button","btn small leather", current ? "Find New Sponsor" : "Find Sponsor");
+    btn.onclick = ()=>goto("signSponsor", { team, category:cat });
+    card.appendChild(btn);
+    s.appendChild(card);
+  });
+
+  return s;
+};
+
+SCREENS.signSponsor = function(){
+  const { team, category } = SCREEN_ARGS;
+  ensureFinance(team);
+  if(!SCREEN_ARGS._pool) SCREEN_ARGS._pool = genSponsorPool(category, 5);
+  const pool = SCREEN_ARGS._pool;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","SIGN · " + SPONSOR_LABEL[category].toUpperCase()));
+  s.appendChild(el("h1","pagetitle","Available Sponsors"));
+  s.appendChild(el("p","pagesub","Pick a sponsor and a contract length. A signing bonus is paid immediately."));
+
+  pool.forEach(candidate=>{
+    const card = el("div","card");
+    card.innerHTML = `<h3>${candidate.name}</h3>
+      <div class="rowline"><span class="label">Tier</span><span class="val">${candidate.tier}</span></div>
+      <div class="rowline"><span class="label">Per-Match Income</span><span class="val">$${candidate.perMatchFee.toLocaleString()}</span></div>`;
+    const row = el("div","stratrow");
+    [1,2,3,4].forEach(years=>{
+      const bonus = Math.round(candidate.perMatchFee*years*6);
+      const btn = el("button", null, `${years}yr — $${(bonus/1000).toFixed(0)}k bonus`);
+      btn.onclick = ()=>{
+        signSponsor(team, category, candidate, years);
+        toast(`${candidate.name} signed as ${SPONSOR_LABEL[category]}.`);
+        goto("sponsorsHub");
+      };
+      row.appendChild(btn);
+    });
+    card.appendChild(row);
+    s.appendChild(card);
+  });
+
+  const rescoutBtn = el("button","btn outline","See Different Sponsors");
+  rescoutBtn.onclick = ()=>{ SCREEN_ARGS._pool = genSponsorPool(category, 5); goto("signSponsor", SCREEN_ARGS); };
+  s.appendChild(rescoutBtn);
   return s;
 };
 
