@@ -1,4 +1,6 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+}
 
 android {
     namespace 'com.cricketmanager.game'
@@ -6,18 +8,31 @@ android {
 
     defaultConfig {
         applicationId "com.cricketmanager.game"
-        minSdk 24
+        minSdk 21
         targetSdk 34
         versionCode 1
-        versionName "1.0.0"
+        versionName "1.0"
+    }
+
+    // 🔑 Automatic bani key se connect karne ke liye
+    signingConfigs {
+        release {
+            storeFile file("../release.keystore")
+            storePassword "cricket2026"
+            keyAlias "cricketalias"
+            keyPassword "cricket2026"
+        }
     }
 
     buildTypes {
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }
+
 dependencies {
     // Unity Ads SDK
     implementation 'com.unity3d.ads:unity-ads:4.12.1'
