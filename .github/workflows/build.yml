@@ -1,4 +1,4 @@
-name: Build Game APK and AAB
+name: Build Signed Game APK and AAB
 on: [push, workflow_dispatch]
 
 jobs:
@@ -19,15 +19,21 @@ jobs:
         with:
           gradle-version: 8.5
 
-      - name: Compile APK and AAB Bundle
+      # ✨ Yeh step bina aapke jhanjhat ke automatic Keystore file bana dega
+      - name: Generate Release Keystore Automatically
         run: |
-          gradle :app:assembleDebug
-          gradle :app:bundleDebug
+          keytool -genkeypair -v -keystore release.keystore -alias cricketalias -keyalg RSA -keysize 2048 -validity 10000 -storepass cricket2026 -keypass cricket2026 -dname "CN=Sumit, O=CricketManager, C=IN"
+
+      # 🚀 Ab signed app build hoga
+      - name: Compile Signed APK and AAB Bundle
+        run: |
+          gradle :app:bundleRelease
+          gradle :app:assembleRelease
 
       - name: Upload Completed Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: Cricket-Manager-26-Builds
+          name: Cricket-Manager-26-Signed-Builds
           path: |
-            **/build/outputs/apk/debug/*.apk
-            **/build/outputs/bundle/debug/*.aab
+            **/build/outputs/apk/release/*.apk
+            **/build/outputs/bundle/release/*.aab
