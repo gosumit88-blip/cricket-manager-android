@@ -7,26 +7,29 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
+import com.unity3d.ads.IUnityAdsInitializationListener;
+import com.unity3d.ads.UnityAds;
+import com.unity3d.services.banners.BannerView;
+import com.unity3d.services.banners.UnityBannerSize;
 
 public class MainActivity extends Activity {
-    private AdView adView;
+    private LinearLayout bannerContainer;
+    private BannerView bannerView;
+    
+    // ⚠️ Yahan apni Unity Dashboard se mili 7-digit Game ID daalein (Testing ke liye koi bhi dummy ID nahi chalegi)
+    private String unityGameId = "800084181"; 
+    private String bannerPlacementId = "BannerAndroid"; // Unity ka default Banner ID
+    private boolean testMode = true; // Testing ke waqt ise true rakhein, real ads ke liye false karein
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // 1. AdMob SDK ko chalu karna
-        MobileAds.initialize(this, initializationStatus -> {});
 
-        // 2. Ek main vertical layout banana
+        // 1. Main vertical layout banana
         LinearLayout mainLayout = new LinearLayout(this);
         mainLayout.setOrientation(LinearLayout.VERTICAL);
 
-        // 3. WebView (Game) setup karna
+        // 2. WebView (Game) setup karna
         WebView webView = new WebView(this);
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
@@ -38,33 +41,51 @@ public class MainActivity extends Activity {
         LinearLayout.LayoutParams webViewParams = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
         webView.setLayoutParams(webViewParams);
-
-        // 4. AdMob Banner View setup karna
-        adView = new AdView(this);
-        adView.setAdSize(AdSize.BANNER);
-        adView.setAdUnitId("ca-app-pub-3940256099942544/6300978111"); // Aapka Test Unit ID
-
-        LinearLayout.LayoutParams adParams = new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        adView.setLayoutParams(adParams);
-
-        // 5. Dono ko layout me jodna (Upar game, Niche Ad)
         mainLayout.addView(webView);
-        mainLayout.addView(adView);
+
+        // 3. Unity Banner ke liye niche ek khali Container banana
+        bannerContainer = new LinearLayout(this);
+        LinearLayout.LayoutParams bannerParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        bannerContainer.setLayoutParams(bannerParams);
+        mainLayout.addView(bannerContainer);
 
         setContentView(mainLayout);
 
-        // 6. Game aur Ad dono ko load karna
+        // Game load karna
         webView.loadUrl("file:///android_asset/index.html");
-        
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
+
+        // 4. Unity Ads ko Initialize karna
+        UnityAds.initialize(getApplicationContext(), unityGameId, testMode, new IUnityAdsInitializationListener() {
+            @Override
+            public void onInitializationComplete() {
+                // SDK chalu hote hi banner load karein
+                loadUnityBanner();
+            }
+
+            @Override
+            public void onInitializationFailed(UnityAds.UnityAdsInitializationError error, String message) {
+                // Agar init fail ho jaye
+            }
+        });
+    }
+
+    // Banner load karne ka function
+    private void loadUnityBanner() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                bannerView = new BannerView(MainActivity.this, bannerPlacementId, new UnityBannerSize(320, 50));
+                bannerContainer.addView(bannerView);
+                bannerView.load();
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
+        if (bannerView != null) {
+            bannerView.destroy();
         }
         super.onDestroy();
     }
