@@ -12,8 +12,8 @@ android {
         targetSdk 35 // 🎯 Ise bhi badal kar 35 kar diya hai
         
         // ⚠️ Naye upload ke liye version badalna zaroori hai
-        versionCode 2 
-        versionName "1.1"
+        versionCode 3 
+        versionName "1.2"
     }
 
     signingConfigs {
@@ -37,4 +37,7 @@ android {
 dependencies {
     // Unity Ads SDK
     implementation 'com.unity3d.ads:unity-ads:4.12.1'
+    
+    // 🚀 Fragment ka outdated issue theek karne ke liye nayi line:
+    implementation 'androidx.fragment:fragment:1.6.2'
 }
