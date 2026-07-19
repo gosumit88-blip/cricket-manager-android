@@ -5,11 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0A0B0E">
 <title>CRICKET MANAGER 26</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 /* ===================== TOKENS ===================== */
 :root{
   --paper:#0A0B0E;
   --paper-2:#16181D;
+  --paper-3:#1D2027;
   --ink:#EDEEF1;
   --ink-soft:#8B93A0;
   --leather:#E5533D;
@@ -22,10 +26,15 @@
   --bad:#FF5C4D;
   --blue:#4FA3F7;
   --purple:#B98CE0;
+  --teal:#3FC7C0;
+  --coral:#FF8A65;
   --on-dark:#F5F6F8;
   --on-light:#14161A;
   --shadow: 0 4px 14px rgba(0,0,0,0.45);
-  --radius: 10px;
+  --shadow-lg: 0 10px 28px rgba(0,0,0,0.5);
+  --radius: 12px;
+  --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', 'Cascadia Code', 'Courier New', monospace;
   font-size: 16px;
 }
 *{box-sizing:border-box;}
@@ -33,13 +42,13 @@ html,body{margin:0;padding:0;}
 body{
   background:var(--paper);
   color:var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: var(--font-display);
   -webkit-font-smoothing:antialiased;
   overscroll-behavior-y: contain;
   min-height:100vh;
 }
-.mono{font-family:'SF Mono','Courier New',monospace;}
-h1,h2,h3,h4{font-family:inherit; font-weight:800; letter-spacing:0.01em; margin:0;}
+.mono{font-family:var(--font-mono); font-variant-numeric:tabular-nums;}
+h1,h2,h3,h4{font-family:var(--font-display); font-weight:800; letter-spacing:-0.01em; margin:0;}
 button{font-family:inherit;}
 ::-webkit-scrollbar{width:0;height:0;}
 
@@ -314,6 +323,67 @@ table.stattable tr.out td{color:var(--ink-soft);}
 .newsitem.retirement{border-left-color:var(--leather);}
 .newsitem.reaction{border-left-color:#E08A3C;}
 
+/* ===================== CELEBRATION POPUP (milestones) ===================== */
+.celebration-overlay{ z-index:150; background:rgba(0,0,0,0.55); animation:fadein 0.2s ease; }
+.celebration-card{
+  position:relative; text-align:center; padding:28px 30px; border-radius:20px;
+  background:linear-gradient(160deg, var(--brass), #8a641a 70%);
+  box-shadow:0 20px 50px rgba(0,0,0,0.55); animation:celebPop 0.45s cubic-bezier(.34,1.56,.64,1);
+  max-width:280px;
+}
+.celebration-card.wicket{background:linear-gradient(160deg, var(--leather), #7a2318 70%);}
+.celeb-emoji{font-size:3rem; line-height:1; margin-bottom:6px;}
+.celeb-title{font-size:1.6rem; font-weight:900; letter-spacing:0.03em; color:#1A1206;}
+.celeb-sub{font-size:0.85rem; font-weight:600; color:rgba(26,18,6,0.85); margin-top:4px;}
+@keyframes celebPop{
+  0%{opacity:0; transform:scale(0.6) translateY(10px);}
+  60%{opacity:1; transform:scale(1.08) translateY(0);}
+  100%{opacity:1; transform:scale(1) translateY(0);}
+}
+
+/* ===================== FIFA-STYLE PLAYER CARD ===================== */
+.fifa-card-wrap{display:flex; justify-content:center; margin:10px 0 18px 0;}
+.fifa-card{
+  position:relative; width:250px; padding:18px 14px 16px 14px;
+  border-radius:18px; text-align:center; overflow:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,0.5);
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+.fifa-card::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(circle at 30% 0%, rgba(255,255,255,0.18), transparent 55%);
+  pointer-events:none;
+}
+.fifa-card.bronze{background:linear-gradient(160deg,#8a5a34,#5c3b20 60%,#3c2513);}
+.fifa-card.silver{background:linear-gradient(160deg,#c9d2da,#8b95a0 55%,#5c636b);}
+.fifa-card.gold{background:linear-gradient(160deg,#f4d879,#c99a2e 55%,#8a641a);}
+.fifa-card.icon{background:linear-gradient(160deg,#f3c9e8,#b98ce0 45%,#5c3f8f);}
+.fifa-card .fc-top{display:flex; align-items:flex-start; justify-content:space-between; text-align:left; position:relative; z-index:1;}
+.fifa-card .fc-ovr{font-size:2.4rem; font-weight:900; line-height:1; color:#1A1206; font-family:monospace;}
+.fifa-card .fc-role{font-size:0.72rem; font-weight:800; text-transform:uppercase; letter-spacing:0.04em; color:#1A1206; margin-top:2px;}
+.fifa-card .fc-flag{font-size:1.4rem;}
+.fifa-card .fc-avatar{margin:6px auto 8px auto; position:relative; z-index:1; filter:drop-shadow(0 6px 10px rgba(0,0,0,0.4));}
+.fifa-card .fc-name{
+  font-size:1.05rem; font-weight:800; color:#1A1206; text-transform:uppercase; letter-spacing:0.02em;
+  border-top:2px solid rgba(26,18,6,0.35); border-bottom:2px solid rgba(26,18,6,0.35);
+  padding:5px 0; margin-bottom:10px; position:relative; z-index:1;
+}
+.fifa-card .fc-stats{
+  display:grid; grid-template-columns:1fr 1fr; gap:6px 14px; text-align:left;
+  position:relative; z-index:1; padding:0 8px;
+}
+.fifa-card .fc-stat{display:flex; align-items:center; justify-content:space-between; font-family:monospace;}
+.fifa-card .fc-stat .fc-stat-val{font-weight:800; color:#1A1206; font-size:1rem;}
+.fifa-card .fc-stat .fc-stat-label{font-size:0.68rem; font-weight:700; color:rgba(26,18,6,0.75); text-transform:uppercase;}
+.fifa-card .fc-specialty{
+  margin-top:10px; font-size:0.62rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+  color:#1A1206; background:rgba(26,18,6,0.15); border-radius:8px; padding:4px 8px; position:relative; z-index:1;
+}
+.fifa-card-tierlabel{
+  text-align:center; font-family:monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.12em;
+  color:var(--ink-soft); margin-top:-10px; margin-bottom:14px;
+}
+
 /* ===================== TEAM DASHBOARD (modern layout) ===================== */
 .dash-hero{
   position:relative; overflow:hidden;
@@ -384,6 +454,8 @@ table.stattable tr.out td{color:var(--ink-soft);}
 .tweetcard .handle{color:var(--blue); font-weight:700; font-size:0.82rem;}
 .tweetcard .tteam{font-size:0.68rem; color:var(--ink-soft);}
 .tweetcard.board .handle{color:var(--brass);}
+.tweetcard.fan .handle{color:var(--purple);}
+.tweetcard.fan{border-style:dashed;}
 .tweetcard .ttext{margin-top:4px; color:var(--ink);}
 </style>
 </head>
@@ -430,7 +502,9 @@ const NAME_POOLS = {
 "Netherlands":{f:["Bas","Daan","Sem","Tim","Luuk","Niels","Kees","Joost","Wouter","Rik","Fabian","Stijn","Max","Teun","Job"],l:["de Vries","Bakker","Visser","Smit","de Boer","Mulder","Dekker","Brouwer","de Groot","Hendriks","van Dijk","Kok","Peters","Willems","Verheij"]},
 "Nepal":{f:["Sandeep","Bikash","Rohit","Aarav","Sagar","Pravin","Dipesh","Suraj","Kiran","Rajan","Bishal","Nabin","Anup","Manoj","Pratik"],l:["Sharma","Thapa","Rai","Gurung","Shrestha","Karki","Adhikari","Basnet","Bista","Poudel","Khadka","Magar","Rana","Bhandari","Lama"]},
 "UAE":{f:["Rameez","Junaid","Waseem","Aayan","Rizwan","Farhan","Zayed","Karan","Ali","Salman","Imad","Fahad","Tariq","Omar","Nasir"],l:["Al Balushi","Khan","Sheikh","Al Nuaimi","Rizvi","Mehta","Al Suwaidi","Chand","Naqvi","Al Marzooqi","Iqbal","Hussain","Al Katheeri","Raza","Anjum"]},
-"Scotland":{f:["Fraser","Callum","Angus","Euan","Ewan","Rory","Struan","Craig","Kyle","Lewis","Finlay","Hamish","Ross","Aidan","Gregor"],l:["MacLeod","Fraser","Stewart","Robertson","Munro","Cameron","Wallace","Sinclair","Grant","Sutherland","Douglas","Ferguson","Buchanan","Kerr","Lindsay"]}
+"Scotland":{f:["Fraser","Callum","Angus","Euan","Ewan","Rory","Struan","Craig","Kyle","Lewis","Finlay","Hamish","Ross","Aidan","Gregor"],l:["MacLeod","Fraser","Stewart","Robertson","Munro","Cameron","Wallace","Sinclair","Grant","Sutherland","Douglas","Ferguson","Buchanan","Kerr","Lindsay"]},
+"USA":{f:["Marcus","Aaron","Jalen","Tyler","Ryan","Devin","Cole","Andre","Nate","Corey","Sam","Ravi","Milan","Jake","Trent"],l:["Harris","Bennett","Coleman","Foster","Reyes","Patel","Sharma","Turner","Hayes","Mitchell","Brooks","Walker","Barnes","Reid","Sanders"]},
+"Oman":{f:["Aqib","Zeeshan","Bilal","Naseem","Jatinder","Khalid","Suraj","Ansh","Kashif","Vinayak","Sufyan","Adnan","Mehran","Faisal","Irfan"],l:["Al Balushi","Al Habsi","Khan","Al Farsi","Sharma","Al Maskari","Butt","Al Rawahi","Iqbal","Al Kindi","Chaudhry","Al Saadi","Raza","Al Hashmi","Malik"]}
 };
 
 /* ===================== TEAM META ===================== */
@@ -438,7 +512,7 @@ const TIER = {
   "India":1,"Australia":1,"England":1,"South Africa":1,
   "Pakistan":2,"New Zealand":2,"Sri Lanka":2,"West Indies":2,
   "Bangladesh":3,"Afghanistan":3,"Ireland":3,"Zimbabwe":3,
-  "Netherlands":4,"Nepal":4,"UAE":4,"Scotland":4
+  "Netherlands":4,"Nepal":4,"UAE":4,"Scotland":4,"USA":4,"Oman":4
 };
 const TIER_RANGE = {1:[76,93], 2:[70,87], 3:[63,80], 4:[55,74]};
 
@@ -458,7 +532,9 @@ const VENUES = {
 "Netherlands":[{name:"VRA Ground",pitch:"Balanced",adv:5,avg:148},{name:"Hazelaarweg",pitch:"Pace Friendly",adv:4,avg:145}],
 "Nepal":[{name:"TU Cricket Ground",pitch:"Batting Friendly",adv:5,avg:155},{name:"Mulpani Stadium",pitch:"Balanced",adv:4,avg:150}],
 "UAE":[{name:"Dubai International Stadium",pitch:"Balanced",adv:5,avg:150},{name:"Sharjah Cricket Stadium",pitch:"Spin Friendly",adv:6,avg:147},{name:"Abu Dhabi Zayed Stadium",pitch:"Balanced",adv:5,avg:149}],
-"Scotland":[{name:"The Grange",pitch:"Pace Friendly",adv:5,avg:142},{name:"Mannofield Park",pitch:"Balanced",adv:4,avg:146}]
+"Scotland":[{name:"The Grange",pitch:"Pace Friendly",adv:5,avg:142},{name:"Mannofield Park",pitch:"Balanced",adv:4,avg:146}],
+"USA":[{name:"Grand Prairie Stadium",pitch:"Batting Friendly",adv:4,avg:155},{name:"Church Street Park",pitch:"Balanced",adv:3,avg:148}],
+"Oman":[{name:"Al Amerat Cricket Stadium",pitch:"Balanced",adv:5,avg:145},{name:"Oman Cricket Academy Ground",pitch:"Spin Friendly",adv:4,avg:140}]
 };
 
 const TEAM_LIST = Object.keys(TIER);
@@ -466,8 +542,94 @@ const TEAM_FLAGS = {
   "India":"🇮🇳","Australia":"🇦🇺","England":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Pakistan":"🇵🇰","New Zealand":"🇳🇿",
   "South Africa":"🇿🇦","Sri Lanka":"🇱🇰","Bangladesh":"🇧🇩","Afghanistan":"🇦🇫","West Indies":"🏏",
   "Ireland":"🇮🇪","Zimbabwe":"🇿🇼","Netherlands":"🇳🇱","Nepal":"🇳🇵","UAE":"🇦🇪","Scotland":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+  "USA":"🇺🇸","Oman":"🇴🇲",
 };
 function flagOf(team){ return TEAM_FLAGS[team] || "🏳️"; }
+
+/* ===================== DOMESTIC CRICKET (India / Australia / England only) ===================== */
+const DOMESTIC_COUNTRIES = ["India","Australia","England"];
+const DOMESTIC_COMP_NAME = { India:"Ranji Trophy", Australia:"Sheffield Shield", England:"County Championship" };
+const DOMESTIC_TEAMS = {
+  India: ["Mumbai","Delhi","Karnataka","Tamil Nadu","Bengal","Punjab","Baroda","Saurashtra"],
+  Australia: ["New South Wales","Victoria","Queensland","Western Australia","South Australia","Tasmania"],
+  England: ["Yorkshire","Surrey","Lancashire","Warwickshire","Essex","Somerset","Kent","Middlesex"],
+};
+const DOMESTIC_TEAM_LIST = DOMESTIC_COUNTRIES.flatMap(c=>DOMESTIC_TEAMS[c]);
+const DOMESTIC_TIER_RANGE = [42, 78]; // developing / fringe talent pool — occasional gems worth promoting
+// Reuse each country's name pool and give every domestic team a simple home ground,
+// so all the existing generic squad/venue machinery (genPlayer, pickVenueFor, etc.) just works.
+DOMESTIC_COUNTRIES.forEach(country=>{
+  DOMESTIC_TEAMS[country].forEach(team=>{
+    NAME_POOLS[team] = NAME_POOLS[country];
+    if(!VENUES[team]) VENUES[team] = [{ name: team + " Cricket Ground", pitch: pick(["Batting Friendly","Balanced","Pace Friendly","Spin Friendly"]), adv:5, avg:150 }];
+  });
+});
+function domesticCountryOf(team){ return DOMESTIC_COUNTRIES.find(c=>DOMESTIC_TEAMS[c].includes(team)) || null; }
+function generateDomesticSquad(team){
+  const usedNames = new Set();
+  const roles = [];
+  for(let i=0;i<6;i++) roles.push("Batter");
+  for(let i=0;i<6;i++) roles.push("Bowler");
+  for(let i=0;i<5;i++) roles.push("All-Rounder");
+  for(let i=0;i<3;i++) roles.push("Wicketkeeper");
+  return roles.map(r => genPlayer(team, r, usedNames, DOMESTIC_TIER_RANGE));
+}
+function ensureDomesticSquads(country){
+  DOMESTIC_TEAMS[country].forEach(team=>{
+    if(!STATE.squads[team]) STATE.squads[team] = generateDomesticSquad(team);
+  });
+}
+function generateDomesticSeason(country, team){
+  ensureDomesticSquads(country);
+  const allTeams = DOMESTIC_TEAMS[country];
+  const opponents = allTeams.filter(t=>t!==team);
+  const fixtures = opponents.map((opp,i)=>({ opponent:opp, mode: i%2===0?"TEST":"ODI", completed:false }));
+  const table = eventTableInit(allTeams);
+  const aiResults = [];
+  // Simulate every match that doesn't involve the user's team, so the table is complete
+  // and those results are visible, not just the user's own fixtures.
+  for(let i=0;i<allTeams.length;i++){
+    for(let j=i+1;j<allTeams.length;j++){
+      const a=allTeams[i], b=allTeams[j];
+      if(a===team || b===team) continue;
+      const mode = Math.random()<0.5 ? "TEST" : "ODI";
+      const res = quickSimAI(a,b);
+      eventRecordResult(table, a, b, res.winner);
+      aiResults.push({ team1:a, team2:b, mode, winner:res.winner, scoreA:res.scoreA, scoreB:res.scoreB });
+      addNewsItem("result", `${DOMESTIC_COMP_NAME[country]}: ${a} ${res.scoreA} vs ${b} ${res.scoreB}${res.winner?` — ${res.winner} win`:" — match tied"}.`);
+    }
+  }
+  STATE.domesticSeason = {
+    country, team, compName: DOMESTIC_COMP_NAME[country],
+    fixtures, currentIndex:0,
+    table, aiResults,
+    matchHistory: [],
+    playerStats: {},
+  };
+  save();
+}
+function domesticEliteScore(p){ return p.career.runs + p.career.wickets*15; }
+function promoteDomesticPlayer(domesticTeam, player){
+  const intlTeam = STATE.managedTeam;
+  const intlSquad = STATE.squads[intlTeam];
+  const sameRole = intlSquad.filter(x=>x.role===player.role).sort((a,b)=>a.overall-b.overall);
+  const weakest = sameRole[0] || intlSquad.slice().sort((a,b)=>a.overall-b.overall)[0];
+  const idx = intlSquad.indexOf(weakest);
+  intlSquad[idx] = player;
+  const domSquad = STATE.squads[domesticTeam];
+  const dIdx = domSquad.indexOf(player);
+  if(dIdx>-1){
+    const used = new Set(domSquad.map(x=>x.name));
+    domSquad[dIdx] = genPlayer(domesticTeam, player.role, used, DOMESTIC_TIER_RANGE);
+  }
+  addNewsItem("result", `${player.name} has been called up from ${domesticTeam} to the ${intlTeam} international squad, with ${weakest.name} released!`);
+  addSocialPost(player.name, genHandle(player.name), intlTeam, pick([
+    "Dream come true! Can't wait to represent my country 🙌",
+    "Years of hard work leading to this moment. Thank you!",
+    "International call-up! Time to prove myself at the top level.",
+  ]), "player");
+  save();
+}
 
 /* ===================== PLAYER GENERATION ===================== */
 let PLAYER_UID = 1;
@@ -560,6 +722,57 @@ function playerAvatarSVG(p, size){
     ${mouthPath}
     ${injuredMark}
   </svg>`;
+}
+function cardTier(overall){
+  if(overall>=90) return "icon";
+  if(overall>=80) return "gold";
+  if(overall>=70) return "silver";
+  return "bronze";
+}
+function cardTierLabel(tier){
+  return { icon:"ICON", gold:"GOLD", silver:"SILVER", bronze:"BRONZE" }[tier] || "BRONZE";
+}
+function roleAbbrev(role){
+  return { Batter:"BAT", Bowler:"BWL", "All-Rounder":"ALR", Wicketkeeper:"WK" }[role] || role.slice(0,3).toUpperCase();
+}
+function computeCardStats(p){
+  const fieldBase = p.role==="Wicketkeeper" ? 75 : 65;
+  const field = clamp(fieldBase + Math.round((p.overall-70)*0.5) + Math.round(seededRand(p.id*7.7)*10-5), 30, 99);
+  const formNum = { Excellent:95, Good:82, Average:68, Poor:52, "Out of Form":38 }[p.form] || 68;
+  const exp = clamp(40 + Math.round(p.experience/2), 40, 99);
+  return {
+    BAT: p.batSkill,
+    BWL: p.bowlSkill,
+    FLD: field,
+    FIT: p.fitness,
+    FRM: formNum,
+    EXP: exp,
+  };
+}
+function renderPlayerCard(p, team){
+  const tier = cardTier(p.overall);
+  const stats = computeCardStats(p);
+  const wrap = el("div","fifa-card-wrap");
+  const card = el("div","fifa-card " + tier);
+  card.innerHTML = `
+    <div class="fc-top">
+      <div><div class="fc-ovr">${p.overall}</div><div class="fc-role">${roleAbbrev(p.role)}</div></div>
+      <div class="fc-flag">${flagOf(team)}</div>
+    </div>
+    <div class="fc-avatar">${playerAvatarSVG(p, 118)}</div>
+    <div class="fc-name">${p.name}</div>
+    <div class="fc-stats">
+      <div class="fc-stat"><span class="fc-stat-label">BAT</span><span class="fc-stat-val">${stats.BAT}</span></div>
+      <div class="fc-stat"><span class="fc-stat-label">BWL</span><span class="fc-stat-val">${stats.BWL}</span></div>
+      <div class="fc-stat"><span class="fc-stat-label">FLD</span><span class="fc-stat-val">${stats.FLD}</span></div>
+      <div class="fc-stat"><span class="fc-stat-label">FIT</span><span class="fc-stat-val">${stats.FIT}</span></div>
+      <div class="fc-stat"><span class="fc-stat-label">FRM</span><span class="fc-stat-val">${stats.FRM}</span></div>
+      <div class="fc-stat"><span class="fc-stat-label">EXP</span><span class="fc-stat-val">${stats.EXP}</span></div>
+    </div>
+    ${p.bowlSpecialty ? `<div class="fc-specialty">${p.bowlSpecialty}</div>` : ""}
+  `;
+  wrap.appendChild(card);
+  return wrap;
 }
 function formArrow(trend){
   if(trend==="up") return `<span style="color:var(--good);">&#9650;</span>`;
@@ -822,6 +1035,11 @@ function postMatchSocial(result, isFinal){
       addSocialPost(p.name, genHandle(p.name), team, text, "player");
     });
   });
+  // Fan buzz — a couple of generic fan accounts weigh in from both sides.
+  const fanTeam = winner || result.team1;
+  const fanRival = winner ? (winner===result.team1?result.team2:result.team1) : result.team2;
+  addSocialPost(genFanHandle(), genFanHandle(true), fanTeam, pick(FAN_WIN_TWEETS).replace("{team}", fanTeam), "fan");
+  addSocialPost(genFanHandle(), genFanHandle(true), fanRival, pick(FAN_LOSS_TWEETS).replace("{team}", fanRival), "fan");
 }
 function preMatchFinalHype(team1, team2){
   [team1, team2].forEach(team=>{
@@ -829,6 +1047,7 @@ function preMatchFinalHype(team1, team2){
     if(!squad || !squad.length) return;
     const p = pick(squad);
     addSocialPost(p.name, genHandle(p.name), team, pick(FINAL_HYPE_TWEETS).replace("🇦🇺", flagOf(team)), "player");
+    addSocialPost(genFanHandle(), genFanHandle(true), team, pick(FAN_HYPE_TWEETS).replace("{team}", team), "fan");
   });
 }
 function dropTweet(player, team){
@@ -838,6 +1057,81 @@ function dropTweet(player, team){
 function retireTweet(player, team){
   addSocialPost(player.name, genHandle(player.name), team, pick(RETIRE_TWEET_TEMPLATES), "player");
   addSocialPost(team+" Cricket Board", boardHandle(team), team, `${player.name} retires today after a wonderful career with ${team}. Thank you for everything! 🏏❤️`, "board");
+}
+
+/* ---------- Fan accounts ---------- */
+const FAN_FIRST = ["Cricket","Boundary","Skipper","Willow","Innings","Maiden","Spin","Seamer","Ashes","Toss"];
+const FAN_SUFFIX = ["Fan92","_Diehard","Army","Faithful","4Ever","Watcher","Tragic","Nation","Crazy","Believer"];
+function genFanHandle(asDisplay){
+  const name = pick(FAN_FIRST) + pick(FAN_SUFFIX) + randi(1,99);
+  return asDisplay ? "@"+name : name;
+}
+const FAN_WIN_TWEETS = [
+  "{team} looked class today, no arguments there.",
+  "That's exactly the performance {team} fans have been waiting for!",
+  "Take a bow {team} — dominant from ball one.",
+];
+const FAN_LOSS_TWEETS = [
+  "Rough watch for {team} fans today, honestly.",
+  "Something has to change for {team}, this can't keep happening.",
+  "Not the {team} performance anyone hoped for.",
+];
+const FAN_HYPE_TWEETS = [
+  "Can't sleep tonight, {team} in a FINAL tomorrow!!",
+  "Whole city painted in {team} colours today. Let's go!",
+  "Been waiting years for {team} to get a final shot. Here we go.",
+];
+function postMilestoneTweets(){
+  if(!MATCH || !MATCH.innings) return;
+  MATCH.innings.forEach(inn=>{
+    const team = teamOfXi(inn.battingXi);
+    Object.entries(inn.bstats).forEach(([id,bs])=>{
+      const p = findMatchPlayerById(Number(id));
+      if(!p) return;
+      if(bs.runs>=100) addSocialPost(p.name, genHandle(p.name), team, pick(["Hundred down! Feeling on top of the world right now 💯","Dream come true bringing up three figures today.","That one's for the fans. HUNDRED! 💯🏏"]), "player");
+      else if(bs.runs>=50) addSocialPost(p.name, genHandle(p.name), team, pick(["Fifty up! Building something here 🙌","Good platform, want to kick on from here.","Happy with that knock so far."]), "player");
+    });
+    const bowlTeam = teamOfXi(inn.bowlingXi);
+    Object.entries(inn.bowlerStats).forEach(([id,bw])=>{
+      const p = findMatchPlayerById(Number(id));
+      if(!p) return;
+      if(bw.wkts>=5) addSocialPost(p.name, genHandle(p.name), bowlTeam, pick(["FIVE-FOR!! Best feeling in the world ⭐","Five wickets today — hard work paying off.","That's a fifer! Buzzing right now."]), "player");
+      else if(bw.wkts===3) addSocialPost(p.name, genHandle(p.name), bowlTeam, pick(["Three wickets in the bag today, happy with that spell.","Good day at the office with the ball."]), "player");
+    });
+  });
+}
+
+/* ---------- Board intervention (losing streak) ---------- */
+function checkBoardIntervention(team, justLost){
+  STATE.losingStreak = STATE.losingStreak || {};
+  STATE.losingStreak[team] = justLost ? (STATE.losingStreak[team]||0) + 1 : 0;
+  if(STATE.losingStreak[team] >= 4){
+    triggerBoardIntervention(team);
+    STATE.losingStreak[team] = 0;
+  }
+}
+function triggerBoardIntervention(team){
+  addNewsItem("result", `BREAKING: ${team}'s cricket board has stepped in after a miserable run of results. Changes are coming.`);
+  const ev = STATE.currentEvent;
+  if(ev && ev.teams && ev.teams.includes(team) && ev.seriesCaptain){
+    const capPlayer = STATE.squads[team].find(p=>p.id===ev.seriesCaptain);
+    if(capPlayer){
+      addNewsItem("result", `${capPlayer.name} has been stripped of the captaincy following the team's dismal form.`);
+      addSocialPost(capPlayer.name, genHandle(capPlayer.name), team, pick([
+        "Tough day. I'll respect the board's decision and back whoever leads next.",
+        "Disappointed, but the team comes first. Wishing the next captain well.",
+        "It's been an honour to lead this side. Time for a new voice.",
+      ]), "player");
+    }
+    ev.seriesCaptain = null;
+  }
+  const st = ensureStaff(team);
+  COACH_ROLES.concat(["physio"]).forEach(role=>{
+    const old = st[role];
+    addNewsItem("result", `${old.name} has been sacked as ${COACH_ROLE_LABEL[role]} after a poor run of results.`);
+    st[role] = { ...genCoachCandidate(role), rating: randi(48,62), contractYears:1, yearsLeft:1, cost:0 };
+  });
+  addSocialPost(team+" Cricket Board", boardHandle(team), team, "The board has acted decisively today. We remain fully committed to turning results around.", "board");
 }
 
 /* ===================== NEWS FEED ===================== */
@@ -943,11 +1237,11 @@ function generateWhatWentWrong(){
 
 /* ===================== TEAM REGIONS (for the world map screen) ===================== */
 const TEAM_REGION = {
-  "India":"Asia","Pakistan":"Asia","Sri Lanka":"Asia","Bangladesh":"Asia","Afghanistan":"Asia","Nepal":"Asia","UAE":"Asia",
+  "India":"Asia","Pakistan":"Asia","Sri Lanka":"Asia","Bangladesh":"Asia","Afghanistan":"Asia","Nepal":"Asia","UAE":"Asia","Oman":"Asia",
   "Australia":"Oceania",
   "England":"Europe","Ireland":"Europe","Scotland":"Europe","Netherlands":"Europe",
   "South Africa":"Africa","Zimbabwe":"Africa",
-  "West Indies":"Americas",
+  "West Indies":"Americas","USA":"Americas",
 };
 
 /* ===================== FINANCE / ECONOMY ===================== */
@@ -1151,6 +1445,29 @@ function chooseHost(managedTeam, teamsInEvent){
   const others = teamsInEvent.filter(t=>t!==managedTeam);
   return pick(others.length ? others : teamsInEvent);
 }
+
+/* ===================== PRE-BUILT TOURNAMENTS (on demand) ===================== */
+const PREBUILT_TOURNAMENTS = [
+  { key:"odi_wc", name:"ODI World Cup", mode:"ODI", pool:null, desc:"Open to any nation. 6-team group, top 4 to semis." },
+  { key:"t20_cup", name:"T20 Cup", mode:"T20", pool:null, desc:"Open to any nation. 6-team group, top 4 to semis." },
+  { key:"asia_cup", name:"Asia Cup", mode:"ODI", pool:"Asia", desc:"Asian nations only. 6-team group, top 4 to semis." },
+];
+function startPrebuiltTournament(key){
+  const team = STATE.managedTeam;
+  const tmpl = PREBUILT_TOURNAMENTS.find(t=>t.key===key);
+  if(!tmpl) return { ok:false };
+  const pool = tmpl.pool ? TEAM_LIST.filter(t=>TEAM_REGION[t]===tmpl.pool) : TEAM_LIST.slice();
+  if(!pool.includes(team)) return { ok:false, reason:"ineligible" };
+  const others = pool.filter(t=>t!==team).sort(()=>Math.random()-0.5).slice(0,5);
+  const teams = [team, ...others];
+  const host = chooseHost(team, teams);
+  STATE.currentEvent = { type:"worldcup", cupName: tmpl.name, mode:tmpl.mode, teams, host, stage:"group", table:eventTableInit(teams), userGroupMatches:others.slice(), aiGroupDone:false, squad14:null, seriesCaptain:null, playerStats:{} };
+  STATE.schedule = [ buildFixture("worldcup", tmpl.mode, others[0], host, `${tmpl.name} — Group Match vs ${others[0]}`) ];
+  addNewsItem("result", `The ${tmpl.name} is here, hosted by ${host}! ${team} have been drawn with ${others.join(", ")}.`);
+  save();
+  return { ok:true };
+}
+
 function generateNextEvent(){
   const team = STATE.managedTeam;
   if(!team) return;
@@ -1243,6 +1560,7 @@ function advanceSchedule(finishedFixture, winner){
         if(finalists.includes(team)){
           const finalOpp = finalists.find(t=>t!==team);
           STATE.schedule.push(buildFixture("tri", ev.mode, finalOpp, ev.host, `Tri-Series Final vs ${finalOpp}`));
+          preMatchFinalHype(team, finalOpp);
         } else {
           const res = quickSimAI(finalists[0], finalists[1]);
           const champ = res.winner || finalists[0];
@@ -1270,6 +1588,7 @@ function advanceSchedule(finishedFixture, winner){
             for(let j=i+1;j<rivals.length;j++){
               const res = quickSimAI(rivals[i], rivals[j]);
               eventRecordResult(ev.table, rivals[i], rivals[j], res.winner);
+              addNewsItem("result", `${ev.cupName}: ${rivals[i]} ${res.scoreA} vs ${rivals[j]} ${res.scoreB}${res.winner?` — ${res.winner} win`:" — match tied"}.`);
               postMatchSocial({team1:rivals[i], team2:rivals[j], winner:res.winner, margin:`${res.scoreA}-${res.scoreB}`}, false);
             }
           }
@@ -1309,6 +1628,7 @@ function advanceSchedule(finishedFixture, winner){
         const finalOpp = ev.otherSemiWinner;
         ev.stage = "final";
         STATE.schedule.push(buildFixture("worldcup", ev.mode, finalOpp, ev.host, `${ev.cupName} — FINAL vs ${finalOpp}`));
+        preMatchFinalHype(team, finalOpp);
       } else {
         const finalRes = quickSimAI(opp, ev.otherSemiWinner);
         const champ = finalRes.winner || opp;
@@ -1345,6 +1665,7 @@ function advanceSchedule(finishedFixture, winner){
             for(let j=i+1;j<rivals.length;j++){
               const res = quickSimAI(rivals[i], rivals[j]);
               eventRecordResult(ev.table, rivals[i], rivals[j], res.winner);
+              addNewsItem("result", `${ev.name}: ${rivals[i]} ${res.scoreA} vs ${rivals[j]} ${res.scoreB}${res.winner?` — ${res.winner} win`:" — match tied"}.`);
               postMatchSocial({team1:rivals[i], team2:rivals[j], winner:res.winner, margin:`${res.scoreA}-${res.scoreB}`}, false);
             }
           }
@@ -1386,6 +1707,7 @@ function freshState(){
     homeGround: {},
     currentYear: 2026,
     sponsors: {},
+    losingStreak: {},
     records: null, // computed lazily
     settings: { commentaryDetail:"full" },
   };
@@ -1425,6 +1747,7 @@ function ensureSquads(){
   STATE.homeGround = STATE.homeGround || {};
   if(STATE.currentYear===undefined) STATE.currentYear = 2026;
   STATE.sponsors = STATE.sponsors || {};
+  STATE.losingStreak = STATE.losingStreak || {};
   if(STATE.staff){
     Object.keys(STATE.staff).forEach(team=>{
       const st = STATE.staff[team];
@@ -1457,7 +1780,9 @@ function loadFromStorage(){
 function hasSave(){ return !!localStorage.getItem(SAVE_KEY); }
 
 /* ===================== NAV ===================== */
+let NAV_PREV = { screen:"mainmenu", args:{} };
 function goto(screen, args){
+  NAV_PREV = { screen: SCREEN, args: SCREEN_ARGS };
   SCREEN = screen; SCREEN_ARGS = args || {};
   render();
   window.scrollTo(0,0);
@@ -1466,6 +1791,24 @@ function toast(msg){
   const t = el("div","toast",msg);
   document.body.appendChild(t);
   setTimeout(()=>t.remove(), 2200);
+}
+function showCelebration(milestone){
+  const content = {
+    fifty: {emoji:"🏏", title:"FIFTY!", sub:`${milestone.player} brings up a half-century!`, wicket:false},
+    hundred: {emoji:"💯", title:"CENTURY!", sub:`${milestone.player} reaches a magnificent hundred!`, wicket:false},
+    threeFor: {emoji:"🎯", title:"3 WICKETS!", sub:`${milestone.player} strikes for the third time!`, wicket:true},
+    fiveFor: {emoji:"⭐", title:"FIVE-FOR!", sub:`${milestone.player} completes a five-wicket haul!`, wicket:true},
+  }[milestone.type];
+  if(!content) return;
+  const overlay = el("div","overlay celebration-overlay");
+  overlay.innerHTML = `<div class="celebration-card${content.wicket?" wicket":""}">
+    <div class="celeb-emoji">${content.emoji}</div>
+    <div class="celeb-title">${content.title}</div>
+    <div class="celeb-sub">${content.sub}</div>
+  </div>`;
+  overlay.onclick = ()=>overlay.remove();
+  document.body.appendChild(overlay);
+  setTimeout(()=>{ if(overlay.parentNode) overlay.remove(); }, 2200);
 }
 
 /* ===================== RENDER SHELL ===================== */
@@ -1562,6 +1905,14 @@ SCREENS.mainmenu = function(){
     goto("teamMaps");
   };
   s.appendChild(mapBtn);
+
+  const domesticBtn = el("button","btn outline","🏏 Play Domestic Cricket");
+  domesticBtn.onclick = ()=>{
+    if(!STATE){ STATE = freshState(); }
+    ensureSquads();
+    goto(STATE.domesticSeason ? "domesticSeasonHub" : "domesticHub");
+  };
+  s.appendChild(domesticBtn);
 
   const exitBtn = el("button","btn outline","5 · Exit");
   exitBtn.onclick = ()=>toast("Close this browser tab to exit.");
@@ -1984,6 +2335,59 @@ SCREENS.eventTable = function(){
     ).join("");
     s.appendChild(semiCard);
   }
+  const statsBtn = el("button","btn leather","📊 Detailed Player Stats");
+  statsBtn.onclick = ()=>goto("eventPlayerStats");
+  s.appendChild(statsBtn);
+  return s;
+};
+
+function renderDetailedStatsBody(s, bucket){
+  const all = Object.values(bucket||{});
+  if(all.length===0){ s.appendChild(el("p","small","No individual figures yet — play a match to populate these leaderboards.")); return; }
+
+  s.appendChild(el("h3",null,"Most Runs"));
+  const topRuns = all.filter(p=>p.balls>0).sort((a,b)=>b.runs-a.runs).slice(0,10);
+  const t1 = el("table","stattable");
+  t1.innerHTML = `<tr><th>Player</th><th>Team</th><th>M</th><th>R</th><th>HS</th><th>Avg</th><th>SR</th><th>4s</th><th>6s</th></tr>` +
+    topRuns.map(p=>{
+      const avg = p.matches>0 ? (p.runs/p.matches).toFixed(1) : "0.0";
+      const sr = p.balls>0 ? (p.runs/p.balls*100).toFixed(1) : "0.0";
+      return `<tr><td>${p.name}</td><td>${p.team}</td><td>${p.matches}</td><td>${p.runs}</td><td>${p.highScore}</td><td>${avg}</td><td>${sr}</td><td>${p.fours}</td><td>${p.sixes}</td></tr>`;
+    }).join("");
+  s.appendChild(t1);
+  s.appendChild(el("div","spacer"));
+
+  s.appendChild(el("h3",null,"Most Wickets"));
+  const topWkts = all.filter(p=>p.ballsBowled>0).sort((a,b)=>b.wickets-a.wickets || a.runsConceded-b.runsConceded).slice(0,10);
+  const t2 = el("table","stattable");
+  t2.innerHTML = `<tr><th>Player</th><th>Team</th><th>M</th><th>W</th><th>R</th><th>Econ</th><th>Avg</th></tr>` +
+    topWkts.map(p=>{
+      const overs = p.ballsBowled/6;
+      const econ = overs>0 ? (p.runsConceded/overs).toFixed(2) : "0.00";
+      const avg = p.wickets>0 ? (p.runsConceded/p.wickets).toFixed(1) : "-";
+      return `<tr><td>${p.name}</td><td>${p.team}</td><td>${p.matches}</td><td>${p.wickets}</td><td>${p.runsConceded}</td><td>${econ}</td><td>${avg}</td></tr>`;
+    }).join("");
+  s.appendChild(t2);
+  s.appendChild(el("div","spacer"));
+
+  s.appendChild(el("h3",null,"Best Strike Rate (min 30 balls)"));
+  const topSR = all.filter(p=>p.balls>=30).sort((a,b)=>(b.runs/b.balls)-(a.runs/a.balls)).slice(0,5);
+  const t3 = el("table","stattable");
+  t3.innerHTML = `<tr><th>Player</th><th>Team</th><th>R</th><th>B</th><th>SR</th></tr>` +
+    topSR.map(p=>`<tr><td>${p.name}</td><td>${p.team}</td><td>${p.runs}</td><td>${p.balls}</td><td>${(p.runs/p.balls*100).toFixed(1)}</td></tr>`).join("");
+  s.appendChild(t3);
+}
+
+SCREENS.eventPlayerStats = function(){
+  const ev = STATE.currentEvent;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow", ev.type==="worldcup" ? (ev.cupName||"WORLD CUP") : ev.type==="custom" ? (ev.name||"TOURNAMENT").toUpperCase() : "TRI-SERIES"));
+  s.appendChild(el("h1","pagetitle","Tournament Stats"));
+  s.appendChild(el("p","pagesub","Individual figures from every match you've played in this competition."));
+  renderDetailedStatsBody(s, ev.playerStats);
+  const back = el("button","btn outline","Back to Points Table");
+  back.onclick = ()=>goto("eventTable");
+  s.appendChild(back);
   return s;
 };
 
@@ -2034,7 +2438,7 @@ SCREENS.bowlingPlanScreen = function(){
 
   const cont = el("button","btn leather","Continue");
   cont.onclick = ()=>{
-    if(SCREEN_ARGS._fixture){
+    if(SCREEN_ARGS._venue){
       SCREEN_ARGS._conditions = genConditions(SCREEN_ARGS._venue);
       goto("conditionsScreen", SCREEN_ARGS);
     } else {
@@ -2386,6 +2790,7 @@ function effectiveBowlingStrategy(inn){
 }
 
 function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
+  MATCH.lastMilestone = null;
   if(inn.currentBowlerId===null){
     inn.currentBowlerId = pickNextBowler(inn);
     inn.thisOverRuns = 0;
@@ -2431,8 +2836,8 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
 
   const stratMap = {Defensive:-6, Balanced:0, Aggressive:6, "Ultra Aggressive":13};
   const bStrat = stratMap[battingStrategy] ?? 0;
-  boundaryBoost += bStrat*0.9;
-  wicketBoost += Math.max(0,bStrat)*0.4;
+  boundaryBoost += bStrat*0.6;
+  wicketBoost += Math.max(0,bStrat)*0.55;
   if(bStrat<0) wicketBoost -= 1.5;
 
   const bowlStratMap = {Defensive:-4, Balanced:0, Attacking:6};
@@ -2451,29 +2856,45 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
     }
   }
 
+  // Pitch, phase, strategy and chase-pressure bonuses all feed into the same boundaryBoost value —
+  // without a ceiling they stack (batting-friendly pitch + death overs + Ultra Aggressive + chasing
+  // hard could all apply at once), which is what was pushing totals well past 250 in T20. Cap it.
+  boundaryBoost = clamp(boundaryBoost, -10, 10);
+
   const edge = clamp((effBat - effBowl)/50, -1, 1); // -1 bowler dominant .. 1 batter dominant
 
   // wide chance
-  if(Math.random() < 0.028){
+  if(Math.random() < (MATCH.mode==="TEST" ? 0.012 : 0.028)){
     inn.runs += 1; inn.extras += 1; bowlStat.runs += 1; bowlStat.curOverRuns += 1; inn.thisOverRuns += 1;
     inn.log.push({tag:"WD", text: commentaryFor("wide"), cls:""});
     return {consumesBall:false, over:false};
   }
 
-  // Base outcome weights. ODI gets its own profile rather than a scaled-down T20 one — a 50-over
-  // innings needs a meaningfully lower per-ball scoring AND wicket rate to land around a realistic
-  // 240-290 with ~7 wickets down, instead of either collapsing early or racing to 350+.
+  // Base outcome weights. ODI and TEST each get their own profile rather than a scaled-down T20 one.
   let w;
-  if(MATCH.mode==="ODI"){
+  if(MATCH.mode==="TEST"){
+    // Test cricket: patient accumulation, rare boundaries, and — per design — wickets governed far more
+    // by the batting/bowling skill-and-form edge than by a flat base rate, so good form genuinely means
+    // wickets stop falling quickly, and poor form means a collapse is a real threat.
+    w = {
+      0: 62 - edge*10,
+      1: 22,
+      2: 4,
+      3: 0.5,
+      4: 4 + edge*3 + boundaryBoost*0.4,
+      6: 0.3 + edge*1,
+      W: 1.6 - edge*3.5 + wicketBoost*0.3,
+    };
+  } else if(MATCH.mode==="ODI"){
     const bb = boundaryBoost*0.5, wb = wicketBoost*0.5;
     w = {
       0: 45 - edge*6 + Math.max(0,-bb)*0.6,
       1: 25,
       2: 7,
       3: 1.5,
-      4: 7 + edge*5 + bb,
-      6: 2 + edge*3 + Math.max(0,bb-2),
-      W: 2.4 - edge*1.2 + wb*0.5,
+      4: 6.5 + edge*3.5 + bb,
+      6: 1.8 + edge*2 + Math.max(0,bb-2),
+      W: 2.4 - edge*1.2 + wb*0.7,
     };
   } else {
     w = {
@@ -2481,12 +2902,12 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
       1: 29,
       2: 9,
       3: 2,
-      4: 13 + edge*7 + boundaryBoost,
-      6: 6 + edge*5 + Math.max(0,boundaryBoost-3),
-      W: 3.2 - edge*1.8 + wicketBoost*0.4,
+      4: 12 + edge*5 + boundaryBoost,
+      6: 5 + edge*3 + Math.max(0,boundaryBoost-3),
+      W: 3.2 - edge*1.8 + wicketBoost*0.7,
     };
   }
-  Object.keys(w).forEach(k=>w[k]=Math.max(0.4,w[k]));
+  Object.keys(w).forEach(k=>w[k]=Math.max(0.3,w[k]));
 
   const outcome = weightedPick(Object.entries(w).map(([k,v])=>[k, v]));
 
@@ -2501,7 +2922,8 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
     inn.wickets++;
     inn.fallOfWickets.push({runs: inn.runs, wkt: inn.wickets, batter: strikerP.name, over: (Math.floor(inn.balls/6)) + "." + (inn.balls%6)});
     entry = {tag:"W", text: `${strikerP.name} — ${commentaryFor("wicket_"+wtype)}`, cls:"wkt"};
-    if(bowlStat.wkts===5){ entry.text += ` — FIVE-WICKET HAUL for ${bowlerP.name}!`; entry.cls = "milestone"; }
+    if(bowlStat.wkts===5){ entry.text += ` — FIVE-WICKET HAUL for ${bowlerP.name}!`; entry.cls = "milestone"; MATCH.lastMilestone = {type:"fiveFor", player:bowlerP.name}; }
+    else if(bowlStat.wkts===3){ entry.text += ` — three wickets now for ${bowlerP.name}!`; entry.cls = "milestone"; MATCH.lastMilestone = {type:"threeFor", player:bowlerP.name}; }
     bowlStat.curOverRuns += 0;
     advanceAfterWicket(inn);
     inn.partnership = { runs:0, balls:0 };
@@ -2514,8 +2936,8 @@ function simulateBall(inn, conditions, battingStrategy, bowlingStrategy){
     else if(runs===0){ entry={tag:"·", text: commentaryFor("dot"), cls:""}; }
     else { entry={tag:String(runs), text: commentaryFor(runs===1?"one":runs===2?"two":"three"), cls:""}; }
     // milestones
-    if(bstat.runs>=50 && bstat.fiftyBall===null){ bstat.fiftyBall = bstat.balls; entry.text += ` — FIFTY for ${strikerP.name}! The crowd rises to applaud.`; entry.cls = "milestone"; }
-    if(bstat.runs>=100 && bstat.hundredBall===null){ bstat.hundredBall = bstat.balls; entry.text += ` — HUNDRED for ${strikerP.name}! A magnificent century, bat raised to the dressing room.`; entry.cls = "milestone"; }
+    if(bstat.runs>=50 && bstat.fiftyBall===null){ bstat.fiftyBall = bstat.balls; entry.text += ` — FIFTY for ${strikerP.name}! The crowd rises to applaud.`; entry.cls = "milestone"; MATCH.lastMilestone = {type:"fifty", player:strikerP.name}; }
+    if(bstat.runs>=100 && bstat.hundredBall===null){ bstat.hundredBall = bstat.balls; entry.text += ` — HUNDRED for ${strikerP.name}! A magnificent century, bat raised to the dressing room.`; entry.cls = "milestone"; MATCH.lastMilestone = {type:"hundred", player:strikerP.name}; }
     if(runs%2===1){ [inn.striker, inn.nonStriker] = [inn.nonStriker, inn.striker]; }
   }
   inn.log.push(entry);
@@ -2555,17 +2977,24 @@ function startMatch(args, battingFirstTeam){
   const userXi = userXiIds.map(id=>userSquad.find(p=>p.id===id));
   const oppXi = pickAiXi(oppSquad);
 
-  const maxOvers = mode==="T20" ? 20 : 50;
+  const isTest = mode==="TEST";
+  const maxOvers = mode==="T20" ? 20 : mode==="ODI" ? 50 : null;
 
   MATCH = {
     mode, userTeam, oppTeam, venue:_venue, conditions:_conditions,
     userXi, oppXi, userCaptain: _captain,
     battingFirstTeam,
     fixtureRef: args._fixture || null,
+    domesticFixture: args._domesticFixture || null,
     bowlingPreset: { [userTeam]: args._bowlingPreset || { mode:"auto" } },
     innings: [],
     currentInningsIdx: 0,
     maxOvers,
+    isTest,
+    testBallBudget: 2700, // 5 days x 90 overs x 6 balls
+    followOnMargin: 200,
+    followOnEnforced: null,
+    followOnDecisionPending: false,
     userBattingStrategy: "Balanced",
     userBowlingStrategy: "Balanced",
     userIsBatting: battingFirstTeam===userTeam,
@@ -2578,7 +3007,11 @@ function startMatch(args, battingFirstTeam){
   };
   const firstBatXi = battingFirstTeam===userTeam ? userXi : oppXi;
   const firstBowlXi = battingFirstTeam===userTeam ? oppXi : userXi;
-  MATCH.innings.push(newInningsState(firstBatXi, firstBowlXi, maxOvers, null));
+  if(isTest){
+    startTestInnings(firstBatXi, firstBowlXi, null);
+  } else {
+    MATCH.innings.push(newInningsState(firstBatXi, firstBowlXi, maxOvers, null));
+  }
   MATCH.userIsBatting = battingFirstTeam===userTeam;
   goto("matchLive");
 }
@@ -2644,6 +3077,11 @@ function endCurrentInnings(){
   const inn = currentInnings();
   inn.done = true;
 
+  if(MATCH.isTest){
+    endTestInnings();
+    return;
+  }
+
   // Two-innings limited-overs format: after innings 1, start the chase with a target.
   if(MATCH.innings.length===1){
     const bowlingFirstXi = inn.battingXi; // now bowls
@@ -2656,6 +3094,184 @@ function endCurrentInnings(){
     return;
   }
   finishMatch();
+}
+
+/* ===================== TEST MATCH ENGINE (domestic cricket) ===================== */
+function testBallsUsedSoFar(){ return MATCH.innings.reduce((s,i)=>s+i.balls,0); }
+function startTestInnings(battingXi, bowlingXi, target){
+  const remaining = MATCH.testBallBudget - testBallsUsedSoFar();
+  const maxOvers = Math.max(1, Math.floor(remaining/6));
+  const inn = newInningsState(battingXi, bowlingXi, maxOvers, target||null);
+  MATCH.innings.push(inn);
+  MATCH.currentInningsIdx = MATCH.innings.length-1;
+  render();
+}
+function testTimeUp(){ return testBallsUsedSoFar() >= MATCH.testBallBudget - 5; }
+function endTestInnings(){
+  const inn = MATCH.innings[MATCH.innings.length-1];
+  const n = MATCH.innings.length;
+
+  if(testTimeUp()){
+    finishTestMatch(true, null, "Match drawn — time ran out.");
+    return;
+  }
+
+  if(n===1){
+    toast(`${teamOfXi(inn.battingXi)} all out / innings closed for ${inn.runs}.`);
+    startTestInnings(inn.bowlingXi, inn.battingXi, null);
+    return;
+  }
+
+  if(n===2){
+    const inn1 = MATCH.innings[0], inn2 = MATCH.innings[1];
+    const deficit = inn1.runs - inn2.runs;
+    if(deficit >= MATCH.followOnMargin){
+      const decidingTeam = teamOfXi(inn1.battingXi); // team now bowling, who gets the follow-on call
+      if(decidingTeam===MATCH.userTeam){
+        MATCH.followOnDecisionPending = true;
+        render();
+        return;
+      }
+      const enforce = deficit>=250 || Math.random()<0.7;
+      applyFollowOnDecision(enforce);
+      return;
+    }
+    startTestInnings(inn1.battingXi, inn1.bowlingXi, null);
+    return;
+  }
+
+  if(n===3){
+    const inn1 = MATCH.innings[0], inn2 = MATCH.innings[1], inn3 = MATCH.innings[2];
+    if(MATCH.followOnEnforced){
+      const team2Combined = inn2.runs + inn3.runs;
+      if(team2Combined <= inn1.runs){
+        finishTestMatch(false, teamOfXi(inn1.battingXi), `won by an innings and ${inn1.runs-team2Combined} runs`);
+        return;
+      }
+      const target = team2Combined - inn1.runs + 1;
+      startTestInnings(inn1.battingXi, inn1.bowlingXi, target);
+      return;
+    } else {
+      const target = (inn1.runs + inn3.runs) - inn2.runs + 1;
+      if(target<=0){
+        finishTestMatch(false, teamOfXi(inn2.battingXi), `won by an innings`);
+        return;
+      }
+      startTestInnings(inn2.battingXi, inn2.bowlingXi, target);
+      return;
+    }
+  }
+
+  // n===4 (or beyond, guarded)
+  const inn4 = MATCH.innings[MATCH.innings.length-1];
+  if(inn4.runs>=inn4.target){
+    finishTestMatch(false, teamOfXi(inn4.battingXi), `won by ${10-inn4.wickets} wicket${10-inn4.wickets===1?"":"s"}`);
+  } else {
+    finishTestMatch(false, teamOfXi(inn4.bowlingXi), `won by ${inn4.target-1-inn4.runs} runs`);
+  }
+}
+function applyFollowOnDecision(enforce){
+  MATCH.followOnDecisionPending = false;
+  MATCH.followOnEnforced = enforce;
+  const inn1 = MATCH.innings[0], inn2 = MATCH.innings[1];
+  if(enforce){
+    toast(`Follow-on enforced! ${teamOfXi(inn2.battingXi)} bat again immediately.`);
+    startTestInnings(inn2.battingXi, inn2.bowlingXi, null);
+  } else {
+    toast(`Follow-on declined. ${teamOfXi(inn1.battingXi)} bat again to build a lead.`);
+    startTestInnings(inn1.battingXi, inn1.bowlingXi, null);
+  }
+}
+function declareInnings(){
+  const inn = currentInnings();
+  if(inn.done) return;
+  inn.done = true;
+  inn.declared = true;
+  toast(`${teamOfXi(inn.battingXi)} declare on ${inn.runs}/${inn.wickets}.`);
+  endCurrentInnings();
+}
+function testLeadTrail(){
+  if(!MATCH.isTest) return null;
+  const inn = currentInnings();
+  const n = MATCH.innings.length;
+  if(n<2) return null;
+  const battingTeam = teamOfXi(inn.battingXi);
+  // Sum each side's innings totals (including the live one) to get the running lead/trail.
+  const teams = {};
+  MATCH.innings.forEach(i=>{
+    const t = teamOfXi(i.battingXi);
+    teams[t] = (teams[t]||0) + i.runs;
+  });
+  const oppTeam = teamOfXi(inn.bowlingXi);
+  const diff = (teams[battingTeam]||0) - (teams[oppTeam]||0);
+  if(diff===0) return { text:"Scores level", cls:"" };
+  return diff>0 ? { text:`${battingTeam} lead by ${diff}`, cls:"good" } : { text:`${battingTeam} trail by ${-diff}`, cls:"bad" };
+}
+
+function aggregateMatchPlayerStats(bucket){
+  const allPlayers = [...MATCH.userXi, ...MATCH.oppXi];
+  const involvedIds = new Set();
+  MATCH.innings.forEach(inn=>{
+    const battingTeam = teamOfXi(inn.battingXi), bowlingTeam = teamOfXi(inn.bowlingXi);
+    Object.entries(inn.bstats).forEach(([id,bs])=>{
+      const p = allPlayers.find(x=>x.id===Number(id)); if(!p) return;
+      if(!bucket[p.id]) bucket[p.id] = { name:p.name, team:battingTeam, runs:0, balls:0, fours:0, sixes:0, wickets:0, runsConceded:0, ballsBowled:0, matches:0, highScore:0 };
+      const st = bucket[p.id];
+      st.runs += bs.runs; st.balls += bs.balls; st.fours += bs.fours; st.sixes += bs.sixes;
+      if(bs.runs>st.highScore) st.highScore = bs.runs;
+      involvedIds.add(p.id);
+    });
+    Object.entries(inn.bowlerStats).forEach(([id,bw])=>{
+      const p = allPlayers.find(x=>x.id===Number(id)); if(!p) return;
+      if(!bucket[p.id]) bucket[p.id] = { name:p.name, team:bowlingTeam, runs:0, balls:0, fours:0, sixes:0, wickets:0, runsConceded:0, ballsBowled:0, matches:0, highScore:0 };
+      const st = bucket[p.id];
+      st.wickets += bw.wkts; st.runsConceded += bw.runs; st.ballsBowled += bw.balls;
+      involvedIds.add(p.id);
+    });
+  });
+  involvedIds.forEach(id=>{ if(bucket[id]) bucket[id].matches++; });
+}
+
+function recordDomesticResult(fixture, winner, isDraw){
+  const ds = STATE.domesticSeason;
+  if(!ds) return;
+  eventRecordResult(ds.table, ds.team, fixture.opponent, isDraw?null:winner);
+  ds.matchHistory.unshift({ opponent:fixture.opponent, mode:fixture.mode, winner: isDraw?null:winner, draw:isDraw });
+  if(ds.matchHistory.length>20) ds.matchHistory.length = 20;
+  ds.currentIndex++;
+  if(ds.currentIndex>=ds.fixtures.length){
+    const champ = eventTop(ds.table,1)[0];
+    addNewsItem("result", `${champ} win the ${ds.compName}!`);
+  }
+}
+function finishTestMatch(isDraw, winner, marginText){
+  stopMatchTimer();
+  MATCH.finished = true;
+  const mom = computeMOM();
+  const team1 = MATCH.battingFirstTeam, team2 = MATCH.battingFirstTeam===MATCH.userTeam?MATCH.oppTeam:MATCH.userTeam;
+  const result = { mode:"TEST", team1, team2, winner, margin: marginText, draw: isDraw,
+    mom: mom?mom.name:"-", venue: MATCH.venue.name, date:new Date().toISOString(),
+    scores: MATCH.innings.map(i=>({team:teamOfXi(i.battingXi), runs:i.runs, wkts:i.wickets, overs:(Math.floor(i.balls/6))+"."+(i.balls%6)+(i.declared?" dec":"")})) };
+  result.analysis = generateExpertAnalysis(result, mom);
+  MATCH.resultSummary = result;
+  result.formChanges = applyCareerUpdates();
+  tickInjuries();
+
+  if(MATCH.domesticFixture){
+    STATE.domesticSeason.playerStats = STATE.domesticSeason.playerStats || {};
+    aggregateMatchPlayerStats(STATE.domesticSeason.playerStats);
+    recordDomesticResult(MATCH.domesticFixture, winner, isDraw);
+  }
+
+  const headline = isDraw
+    ? `${team1} and ${team2} play out a draw at ${result.venue}.`
+    : `${winner} beat ${winner===team1?team2:team1} ${marginText} at ${result.venue}.`;
+  addNewsItem("result", headline);
+  postMatchSocial(result, false);
+  postMilestoneTweets();
+
+  save();
+  goto("presentation");
 }
 
 function computeMOM(){
@@ -2687,14 +3303,37 @@ function finishMatch(){
     winner, margin, draw, mom: mom?mom.name:"-", venue: MATCH.venue.name, date:new Date().toISOString(),
     scores: MATCH.innings.map(i=>({team:teamOfXi(i.battingXi), runs:i.runs, wkts:i.wickets, overs:(Math.floor(i.balls/6))+"."+(i.balls%6)})) };
   result.analysis = generateExpertAnalysis(result, mom);
-  if(result.winner && result.winner!==MATCH.userTeam) result.whatWentWrong = generateWhatWentWrong();
   MATCH.resultSummary = result;
   result.formChanges = applyCareerUpdates();
+  tickInjuries();
+
+  if(MATCH.domesticFixture){
+    // Domestic matches (India/Australia/England only) stay out of the international
+    // fanbase/finance/board-intervention systems and the international match history —
+    // this branch is what was missing, which is why the season got stuck after the first match.
+    STATE.domesticSeason.playerStats = STATE.domesticSeason.playerStats || {};
+    aggregateMatchPlayerStats(STATE.domesticSeason.playerStats);
+    recordDomesticResult(MATCH.domesticFixture, winner, draw);
+    const headline = draw || !winner
+      ? `${team1} and ${team2} played out a tied finish at ${result.venue}.`
+      : `${winner} beat ${winner===team1?team2:team1} ${margin} at ${result.venue}.`;
+    addNewsItem("result", headline);
+    postMatchSocial(result, false);
+    postMilestoneTweets();
+    save();
+    goto("presentation");
+    return;
+  }
+
+  if(result.winner && result.winner!==MATCH.userTeam) result.whatWentWrong = generateWhatWentWrong();
+  if(MATCH.fixtureRef && STATE.currentEvent){
+    STATE.currentEvent.playerStats = STATE.currentEvent.playerStats || {};
+    aggregateMatchPlayerStats(STATE.currentEvent.playerStats);
+  }
   updateRecentForm(team1, team2, winner);
   updateRivalry(team1, team2, winner);
   updateFanbase(team1, team2, winner, result);
   updateFinance(team1, team2, winner, result);
-  tickInjuries();
   STATE.matchHistory.push(result);
   ageUpSeasonIfDue();
 
@@ -2710,6 +3349,10 @@ function finishMatch(){
   }
   const isFinalFixture = MATCH.fixtureRef && /final/i.test(MATCH.fixtureRef.label);
   postMatchSocial(result, isFinalFixture);
+  postMilestoneTweets();
+
+  const userLost = !result.draw && result.winner && result.winner!==MATCH.userTeam;
+  checkBoardIntervention(MATCH.userTeam, userLost);
 
   if(MATCH.fixtureRef){
     STATE.schedule = STATE.schedule.filter(f=>f.id!==MATCH.fixtureRef.id);
@@ -2863,7 +3506,8 @@ SCREENS.matchLive = function(){
   const battingTeam = teamOfXi(inn.battingXi);
   const bowlingTeam = teamOfXi(inn.bowlingXi);
 
-  s.appendChild(el("div","eyebrow", MATCH.mode + " · " + MATCH.venue.name));
+  const testInfo = MATCH.isTest ? ` · Innings ${MATCH.innings.length} · Day ${Math.min(5, Math.floor(testBallsUsedSoFar()/540)+1)}` : "";
+  s.appendChild(el("div","eyebrow", MATCH.mode + " · " + MATCH.venue.name + testInfo));
 
   const board = el("div","scoreboard");
   const oversStr = MATCH.maxOvers ? `${Math.floor(inn.balls/6)}.${inn.balls%6} / ${MATCH.maxOvers}` : `${Math.floor(inn.balls/6)}.${inn.balls%6}`;
@@ -2891,7 +3535,28 @@ SCREENS.matchLive = function(){
     board.innerHTML += `<div class="metarow"><span>Run Rate</span><span class="crr">${crr}</span></div>`;
   }
   board.innerHTML += `<div class="metarow"><span>Partnership</span><span style="color:var(--purple);font-weight:700;">${inn.partnership.runs} (${inn.partnership.balls} balls)</span></div>`;
+  if(MATCH.isTest){
+    const lt = testLeadTrail();
+    if(lt) board.innerHTML += `<div class="metarow"><span>Match Position</span><span style="color:${lt.cls==="good"?"var(--good)":lt.cls==="bad"?"var(--bad)":"var(--ink)"};font-weight:700;">${lt.text}</span></div>`;
+  }
   s.appendChild(board);
+
+  if(MATCH.isTest && MATCH.followOnDecisionPending){
+    const foCard = el("div","card leather");
+    foCard.style.borderLeftColor = "var(--brass)";
+    const inn1 = MATCH.innings[0], inn2 = MATCH.innings[1];
+    const deficit = inn1.runs - inn2.runs;
+    foCard.innerHTML = `<h3>Follow-On Decision</h3><p class="small" style="margin:0 0 8px 0;">${teamOfXi(inn2.battingXi)} trail by ${deficit} runs. Enforce the follow-on?</p>`;
+    const row = el("div","btnrow");
+    const enforceBtn = el("button","btn leather small","Enforce Follow-On");
+    enforceBtn.onclick = ()=>applyFollowOnDecision(true);
+    const declineBtn = el("button","btn outline small","Bat Again Instead");
+    declineBtn.onclick = ()=>applyFollowOnDecision(false);
+    row.appendChild(enforceBtn); row.appendChild(declineBtn);
+    foCard.appendChild(row);
+    s.appendChild(foCard);
+    return s;
+  }
 
   // strategy controls (only editable by user for whichever side they control; batting strategy controls batting team, bowling strategy controls bowling team)
   const stratCard = el("div","card");
@@ -2936,6 +3601,14 @@ SCREENS.matchLive = function(){
   skipInnBtn.onclick = ()=>{ if(confirm("Fast-forward the rest of this innings?")) fastForwardInnings(); };
   controls.appendChild(nextBallBtn); controls.appendChild(overBtn); controls.appendChild(autoBtn); controls.appendChild(skipInnBtn);
   s.appendChild(controls);
+
+  if(MATCH.isTest && isUserBattingNow() && !inn.done){
+    const declareBtn = el("button","btn outline","🏳 Declare Innings");
+    declareBtn.onclick = ()=>{
+      if(confirm(`Declare ${teamOfXi(inn.battingXi)}'s innings closed on ${inn.runs}/${inn.wickets}?`)) declareInnings();
+    };
+    s.appendChild(declareBtn);
+  }
 
   if(MATCH.autoSpeed){
     const speedRow = el("div","stratrow");
@@ -3021,6 +3694,7 @@ function playBalls(n){
     if(inningsOver(inn)){ endCurrentInnings(); return; }
   }
   render();
+  if(MATCH.lastMilestone) showCelebration(MATCH.lastMilestone);
 }
 function playUntil(stopCond){
   const startInn = currentInnings();
@@ -3058,6 +3732,7 @@ function startAutoTimer(){
     if(r && r.rain){ stopMatchTimer(); toast(MATCH._rainNote); render(); return; }
     if(inningsOver(inn)){ endCurrentInnings(); return; }
     render();
+    if(MATCH.lastMilestone) showCelebration(MATCH.lastMilestone);
   }, intervalMs);
 }
 function toggleAuto(){
@@ -3222,8 +3897,9 @@ SCREENS.matchResult = function(){
 
   MATCH.innings.forEach((inn,idx)=> s.appendChild(scorecardBlock(inn, idx)) );
 
-  const menuBtn = el("button","btn leather","Return to Team Dashboard");
-  menuBtn.onclick = ()=>{ MATCH=null; goto("careerHub"); };
+  const wasDomestic = !!MATCH.domesticFixture;
+  const menuBtn = el("button","btn leather", wasDomestic ? "Return to Domestic Season" : "Return to Team Dashboard");
+  menuBtn.onclick = ()=>{ MATCH=null; goto(wasDomestic ? "domesticSeasonHub" : "careerHub"); };
   s.appendChild(menuBtn);
   const recBtn = el("button","btn outline","View Records");
   recBtn.onclick = ()=>goto("records");
@@ -3257,10 +3933,32 @@ SCREENS.squadHome = function(){
   return s;
 };
 
+SCREENS.playerCard = function(){
+  const { playerId, team } = SCREEN_ARGS;
+  const p = STATE.squads[team].find(x=>x.id===playerId);
+  const tier = cardTier(p.overall);
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow", team.toUpperCase()));
+  s.appendChild(el("h1","pagetitle","Player Card"));
+  s.appendChild(el("p","pagesub","A snapshot of " + p.name + "'s current abilities."));
+
+  s.appendChild(renderPlayerCard(p, team));
+  s.appendChild(el("div","fifa-card-tierlabel", cardTierLabel(tier) + " CARD"));
+
+  const back = el("button","btn leather","Back to Profile");
+  back.onclick = ()=>goto("playerProfile", { playerId, team, _returnTo: SCREEN_ARGS._returnTo });
+  s.appendChild(back);
+  return s;
+};
+
 SCREENS.playerProfile = function(){
   const {playerId, team} = SCREEN_ARGS;
+  if(!SCREEN_ARGS._returnTo) SCREEN_ARGS._returnTo = { screen: NAV_PREV.screen, args: NAV_PREV.args };
   const p = STATE.squads[team].find(x=>x.id===playerId);
   const s = el("div","screen");
+  const backBtn = el("button","btn small outline","← Back");
+  backBtn.onclick = ()=>goto(SCREEN_ARGS._returnTo.screen, SCREEN_ARGS._returnTo.args);
+  s.appendChild(backBtn);
   s.appendChild(el("div","eyebrow", team.toUpperCase()));
   const headerRow = el("div");
   headerRow.style.display = "flex"; headerRow.style.alignItems = "center"; headerRow.style.gap = "14px"; headerRow.style.marginBottom = "10px";
@@ -3272,6 +3970,10 @@ SCREENS.playerProfile = function(){
   titleWrap.querySelector(".pagesub").style.marginBottom = "0";
   headerRow.appendChild(titleWrap);
   s.appendChild(headerRow);
+
+  const cardBtn = el("button","btn brass","🎴 View Player Card");
+  cardBtn.onclick = ()=>goto("playerCard", { playerId, team, _returnTo: SCREEN_ARGS._returnTo });
+  s.appendChild(cardBtn);
 
   if(p.injury.injured){
     const injCard = el("div","card leather");
@@ -3637,6 +4339,7 @@ SCREENS.careerHub = function(){
     ["🏟️","Home Ground","selectHomeGround"],
     ["🤝","Sponsors","sponsorsHub"],
     ["✨","Create Tournament","createTournament"],
+    ["🏆","Pre-Built Cups","prebuiltTournaments"],
   ];
   const actionsGrid = el("div","quick-actions");
   actions.forEach(([icon,label,dest])=>{
@@ -3775,7 +4478,7 @@ SCREENS.chooseReplacement = function(){
 
 /* ===================== SOCIAL LIFE SCREENS ===================== */
 function renderSocialPost(post){
-  const card = el("div","tweetcard" + (post.kind==="board"?" board":""));
+  const card = el("div","tweetcard" + (post.kind==="board"?" board":"") + (post.kind==="fan"?" fan":""));
   card.innerHTML = `<div class="thead"><span class="handle">${post.handle}</span><span class="tteam">${flagOf(post.team)} ${post.team}</span></div><div class="ttext">${post.text}</div>`;
   return card;
 }
@@ -3783,7 +4486,7 @@ SCREENS.socialLife = function(){
   const s = el("div","screen");
   s.appendChild(el("div","eyebrow","SOCIAL LIFE"));
   s.appendChild(el("h1","pagetitle","Social Life Dashboard"));
-  s.appendChild(el("p","pagesub","What players, cricket boards and fans across the world are saying."));
+  s.appendChild(el("p","pagesub","What players, cricket boards and fans across every nation are saying — updated after every match."));
 
   const browseBtn = el("button","btn leather","Browse All Players");
   browseBtn.onclick = ()=>goto("socialPlayers");
@@ -3792,14 +4495,19 @@ SCREENS.socialLife = function(){
   const feed = STATE.socialFeed || [];
   const boardPosts = feed.filter(p=>p.kind==="board").slice(0,5);
   const playerPosts = feed.filter(p=>p.kind==="player").slice(0,8);
+  const fanPosts = feed.filter(p=>p.kind==="fan").slice(0,6);
 
-  s.appendChild(el("h3",null,"Cricket Boards"));
+  s.appendChild(el("div","section-title","Cricket Boards"));
   if(boardPosts.length===0) s.appendChild(el("p","small","No board statements yet."));
   boardPosts.forEach(post=>s.appendChild(renderSocialPost(post)));
 
-  s.appendChild(el("h3",null,"Player Chatter"));
+  s.appendChild(el("div","section-title","Player Chatter"));
   if(playerPosts.length===0) s.appendChild(el("p","small","No player posts yet — play some matches to get the cricket world talking."));
   playerPosts.forEach(post=>s.appendChild(renderSocialPost(post)));
+
+  s.appendChild(el("div","section-title","Fan Buzz"));
+  if(fanPosts.length===0) s.appendChild(el("p","small","No fan reactions yet."));
+  fanPosts.forEach(post=>s.appendChild(renderSocialPost(post)));
 
   return s;
 };
@@ -3948,6 +4656,38 @@ SCREENS.scoutHub = function(){
 };
 
 /* ===================== CREATE SERIES / TOURNAMENT ===================== */
+/* ===================== PRE-BUILT TOURNAMENTS SCREEN ===================== */
+SCREENS.prebuiltTournaments = function(){
+  const team = STATE.managedTeam;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","TOURNAMENTS"));
+  s.appendChild(el("h1","pagetitle","Pre-Built Tournaments"));
+  s.appendChild(el("p","pagesub","Jump straight into a ready-made tournament instead of waiting for the regular schedule."));
+  PREBUILT_TOURNAMENTS.forEach(tmpl=>{
+    const pool = tmpl.pool ? TEAM_LIST.filter(t=>TEAM_REGION[t]===tmpl.pool) : TEAM_LIST;
+    const eligible = pool.includes(team);
+    const card = el("div","card" + (eligible?" pitchline":" leather"));
+    card.innerHTML = `<h3>${tmpl.name}</h3><p class="small" style="margin:0 0 8px 0;color:var(--ink-soft);">${tmpl.desc}</p>`;
+    if(!eligible){
+      card.innerHTML += `<p class="small" style="margin:0;color:var(--bad);">${team} isn't eligible for this tournament.</p>`;
+    } else {
+      const btn = el("button","btn leather small","Start Tournament");
+      btn.onclick = ()=>{
+        if(STATE.currentEvent){
+          if(!confirm("This will replace your current series/tournament in progress. Continue?")) return;
+        }
+        const res = startPrebuiltTournament(tmpl.key);
+        if(!res.ok){ toast("Couldn't start this tournament."); return; }
+        toast(`${tmpl.name} started!`);
+        goto("careerHub");
+      };
+      card.appendChild(btn);
+    }
+    s.appendChild(card);
+  });
+  return s;
+};
+
 SCREENS.createTournament = function(){
   const team = STATE.managedTeam;
   if(!SCREEN_ARGS._name) SCREEN_ARGS._name = "";
@@ -4103,6 +4843,182 @@ SCREENS.signSponsor = function(){
   return s;
 };
 
+/* ===================== DOMESTIC CRICKET SCREENS ===================== */
+SCREENS.domesticHub = function(){
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","DOMESTIC CRICKET"));
+  s.appendChild(el("h1","pagetitle","Play Domestic Cricket"));
+  s.appendChild(el("p","pagesub","Choose a country to manage a domestic team. Only Test and One Day matches are played domestically."));
+  DOMESTIC_COUNTRIES.forEach(country=>{
+    const card = el("div","card pitchline");
+    card.style.cursor = "pointer";
+    card.innerHTML = `<h3>${flagOf(country)} ${country}</h3><p class="small" style="margin:0;color:var(--ink-soft);">${DOMESTIC_COMP_NAME[country]} · ${DOMESTIC_TEAMS[country].length} teams</p>`;
+    card.onclick = ()=>goto("domesticTeamSelect", {country});
+    s.appendChild(card);
+  });
+  return s;
+};
+
+SCREENS.domesticTeamSelect = function(){
+  const {country} = SCREEN_ARGS;
+  ensureDomesticSquads(country);
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow", DOMESTIC_COMP_NAME[country].toUpperCase()));
+  s.appendChild(el("h1","pagetitle","Choose Your Domestic Team"));
+  s.appendChild(el("p","pagesub","This is the team you'll manage through the " + DOMESTIC_COMP_NAME[country] + " season."));
+  const grid = el("div","gridsel");
+  DOMESTIC_TEAMS[country].forEach(team=>{
+    const opt = el("div","opt");
+    opt.innerHTML = `${team}<small>Squad avg ${squadAvg(team)}</small>`;
+    opt.onclick = ()=>{
+      generateDomesticSeason(country, team);
+      toast(`Managing ${team} in the ${DOMESTIC_COMP_NAME[country]}!`);
+      goto("domesticSeasonHub");
+    };
+    grid.appendChild(opt);
+  });
+  s.appendChild(grid);
+  return s;
+};
+
+SCREENS.domesticSeasonHub = function(){
+  const ds = STATE.domesticSeason;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow", ds.compName.toUpperCase()));
+  s.appendChild(el("h1","pagetitle", ds.team));
+  s.appendChild(el("p","pagesub", flagOf(ds.country) + " " + ds.country + " domestic season · Squad rating " + squadAvg(ds.team)));
+
+  const table = el("table","stattable");
+  table.innerHTML = `<tr><th>Team</th><th>P</th><th>W</th><th>Pts</th></tr>` +
+    Object.entries(ds.table).sort((a,b)=>b[1].pts-a[1].pts).map(([team,row])=>
+      `<tr><td>${team}${team===ds.team?" *":""}</td><td>${row.played}</td><td>${row.won}</td><td>${row.pts}</td></tr>`
+    ).join("");
+  s.appendChild(table);
+  s.appendChild(el("div","spacer"));
+
+  const fixture = ds.fixtures[ds.currentIndex];
+  if(fixture){
+    const fxCard = el("div","fixture-hero");
+    fxCard.innerHTML = `<div class="fh-tag">Next Fixture · ${fixture.mode}</div>
+      <div class="fh-title">${ds.team} vs ${fixture.opponent}</div>`;
+    s.appendChild(fxCard);
+    const playBtn = el("button","btn leather","▶ Play This Match");
+    playBtn.onclick = ()=>{
+      const venue = pickVenueFor(ds.team);
+      goto("xiSelect", { mode:fixture.mode, userTeam:ds.team, oppTeam:fixture.opponent, _venue:venue, _venueHomeTeam:ds.team, _domesticFixture:fixture });
+    };
+    s.appendChild(playBtn);
+  } else {
+    const champ = eventTop(ds.table,1)[0];
+    const doneCard = el("div","card brass");
+    doneCard.innerHTML = `<h3>Season Complete</h3><p class="small" style="margin:0;">${champ} have won the ${ds.compName}!</p>`;
+    s.appendChild(doneCard);
+    const newSeasonBtn = el("button","btn leather","Start New Season");
+    newSeasonBtn.onclick = ()=>{ generateDomesticSeason(ds.country, ds.team); goto("domesticSeasonHub"); };
+    s.appendChild(newSeasonBtn);
+  }
+
+  const promoteBtn = el("button","btn outline","🔎 Sign Domestic Talent to International Squad");
+  promoteBtn.onclick = ()=>goto("domesticPromote", {country: ds.country});
+  s.appendChild(promoteBtn);
+
+  const statsBtn = el("button","btn outline","📊 Detailed Series Player Stats");
+  statsBtn.onclick = ()=>goto("domesticPlayerStats");
+  s.appendChild(statsBtn);
+
+  s.appendChild(el("div","section-title","Recent Domestic Results"));
+  if(ds.matchHistory.length===0){
+    s.appendChild(el("p","small","No matches played this season yet."));
+  } else {
+    ds.matchHistory.slice(0,8).forEach(m=>{
+      const c = el("div","card");
+      const line = m.draw ? `${ds.team} vs ${m.opponent} — Draw` : `${m.winner===ds.team?"Won":"Lost"} vs ${m.opponent}`;
+      c.innerHTML = `<h3>${m.mode}</h3><p class="small" style="margin:0;">${line}</p>`;
+      s.appendChild(c);
+    });
+  }
+
+  if((ds.aiResults||[]).length){
+    s.appendChild(el("div","section-title","Other Results This Season"));
+    ds.aiResults.forEach(r=>{
+      const c = el("div","card");
+      const line = r.winner ? `${r.winner} won` : "Match tied";
+      c.innerHTML = `<h3>${r.mode} · ${r.team1} vs ${r.team2}</h3><p class="small" style="margin:0;">${r.team1} ${r.scoreA} — ${r.team2} ${r.scoreB} · ${line}</p>`;
+      s.appendChild(c);
+    });
+  }
+
+  const exitBtn = el("button","btn outline","Exit Domestic Cricket");
+  exitBtn.onclick = ()=>{
+    if(confirm("Leave your domestic season? Progress is kept if you come back via 'Play Domestic Cricket' later.")) goto("mainmenu");
+  };
+  s.appendChild(exitBtn);
+  return s;
+};
+
+SCREENS.domesticPlayerStats = function(){
+  const ds = STATE.domesticSeason;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow", ds.compName.toUpperCase()));
+  s.appendChild(el("h1","pagetitle","Season Player Stats"));
+  s.appendChild(el("p","pagesub","Individual figures from every match you've played this domestic season."));
+  renderDetailedStatsBody(s, ds.playerStats);
+  const back = el("button","btn outline","Back to Season");
+  back.onclick = ()=>goto("domesticSeasonHub");
+  s.appendChild(back);
+  return s;
+};
+
+SCREENS.domesticPlayerStats = function(){
+  const ds = STATE.domesticSeason;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow", ds.compName.toUpperCase()));
+  s.appendChild(el("h1","pagetitle","Season Stats"));
+  s.appendChild(el("p","pagesub","Individual figures from every match you've played this season."));
+  renderDetailedStatsBody(s, ds.playerStats);
+  const back = el("button","btn outline","Back to Season");
+  back.onclick = ()=>goto("domesticSeasonHub");
+  s.appendChild(back);
+  return s;
+};
+
+SCREENS.domesticPromote = function(){
+  const {country} = SCREEN_ARGS;
+  const s = el("div","screen");
+  s.appendChild(el("div","eyebrow","TALENT SCOUTING"));
+  s.appendChild(el("h1","pagetitle","Sign Domestic Talent"));
+  const canPromote = STATE.managedTeam===country;
+  s.appendChild(el("p","pagesub", canPromote
+    ? `Top performers across the ${DOMESTIC_COMP_NAME[country]} — sign them straight into your ${STATE.managedTeam} international squad.`
+    : `You manage ${STATE.managedTeam} internationally, so you can't call up ${country} domestic players. Only players from ${STATE.managedTeam}'s own domestic system can be promoted.`));
+
+  let all = [];
+  DOMESTIC_TEAMS[country].forEach(team=>{
+    (STATE.squads[team]||[]).forEach(p=>{ if(p.career.matches>=3) all.push({p, team}); });
+  });
+  all.sort((a,b)=>domesticEliteScore(b.p)-domesticEliteScore(a.p));
+  all.slice(0,15).forEach(({p,team})=>{
+    const card = el("div","card");
+    card.innerHTML = `<h3>${p.name}</h3>
+      <div class="rowline"><span class="label">Domestic Team</span><span class="val">${team}</span></div>
+      <div class="rowline"><span class="label">Role</span><span class="val">${p.role}${p.bowlType?" · "+p.bowlType:""}</span></div>
+      <div class="rowline"><span class="label">Overall</span><span class="val">${p.overall}</span></div>
+      <div class="rowline"><span class="label">Domestic Record</span><span class="val">${p.career.runs} runs, ${p.career.wickets} wkts</span></div>`;
+    const btn = el("button","btn leather small","Sign to International Squad");
+    btn.disabled = !canPromote;
+    btn.onclick = ()=>{
+      promoteDomesticPlayer(team, p);
+      toast(`${p.name} signed to ${STATE.managedTeam}!`);
+      goto("domesticPromote", SCREEN_ARGS);
+    };
+    card.appendChild(btn);
+    s.appendChild(card);
+  });
+  if(all.length===0) s.appendChild(el("p","small","No proven domestic performers yet — play a few seasons first."));
+
+  return s;
+};
+
 /* ===================== HOME GROUND ===================== */
 SCREENS.selectHomeGround = function(){
   const team = STATE.managedTeam || STATE._activeTeam;
@@ -4224,7 +5140,7 @@ SCREENS.playerStats = function(){
   s.appendChild(el("div","eyebrow","PLAYER STATS"));
   s.appendChild(el("h1","pagetitle","Leaderboards"));
   let all = [];
-  Object.entries(STATE.squads).forEach(([team,squad])=>squad.forEach(p=>all.push({...p, team})));
+  Object.entries(STATE.squads).forEach(([team,squad])=>{ if(TEAM_LIST.includes(team)) squad.forEach(p=>all.push({...p, team})); });
 
   s.appendChild(el("h3",null,"Most Runs"));
   const topRuns = all.slice().sort((a,b)=>b.career.runs-a.career.runs).slice(0,10);
@@ -4262,7 +5178,7 @@ SCREENS.records = function(){
   if(history.length===0){ lowestTeam={val:0,who:"-"}; }
 
   let bestInd={val:0,who:"-"}, bestBowl={wkts:-1,runs:999,who:"-"}, mostRuns={val:0,who:"-"}, mostWkts={val:0,who:"-"};
-  Object.entries(STATE.squads).forEach(([team,squad])=>{
+  Object.entries(STATE.squads).filter(([team])=>TEAM_LIST.includes(team)).forEach(([team,squad])=>{
     squad.forEach(p=>{
       if(p.career.highScore>bestInd.val) bestInd={val:p.career.highScore,who:`${p.name} (${team})`};
       if(p.career.runs>mostRuns.val) mostRuns={val:p.career.runs,who:`${p.name} (${team})`};
